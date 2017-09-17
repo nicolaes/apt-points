@@ -1,23 +1,22 @@
 export const environment = {
     production: false,
 
-    region: 'us-east-1',
+    region: 'eu-central-1',
 
-    identityPoolId: 'us-east-1:fbe0340f-9ffc-4449-a935-bb6a6661fd53',
-    userPoolId: 'us-east-1_PGSbCVZ7S',
-    clientId: 'hh5ibv67so0qukt55c5ulaltk',
+    identityPoolId: 'eu-central-1:b0305879-460e-4d51-add8-d5044e840af1',
+    userPoolId: 'eu-central-1_4R0a9I5ml',
+    clientId: '1qnudv7062fl8g8uanmjeqe9rt',
 
     rekognitionBucket: 'rekognition-pics',
     albumName: "usercontent",
-    bucketRegion: 'us-east-1',
+    bucketRegion: 'eu-central-1',
 
-    ddbTableName: 'LoginTrail',
+    ddbTableName: 'LoginTrailaptpoints',
 
     cognito_idp_endpoint: '',
     cognito_identity_endpoint: '',
     sts_endpoint: '',
     dynamodb_endpoint: '',
     s3_endpoint: ''
-
 };
 

@@ -52,7 +52,7 @@
     "no-unused-variable": true,
     "no-unreachable": true,
     "no-use-before-declare": true,
-    "no-var-keyword": true,
+    "no-var-keyword": false,
     "object-literal-sort-keys": false,
     "one-line": [
       true,
@@ -62,7 +62,7 @@
       "check-whitespace"
     ],
     "quotemark": [
-      true,
+      false,
       "single"
     ],
     "radix": true,

@@ -5,18 +5,20 @@ import {Router} from "@angular/router";
 import {DynamoDBService} from "../../service/ddb.service";
 
 
-export class Stuff {
-    public type: string;
-    public date: string;
+export class UserPoints {
+    public userId: string;
+    public userName: string;
+    public points: number;
+    public underVote: number;
 }
 
 @Component({
     selector: 'aws-apt-points',
-    templateUrl: './useractivity.html'
+    templateUrl: './points.html'
 })
-export class UseractivityComponent implements LoggedInCallback {
+export class PointsComponent implements LoggedInCallback {
 
-    public logdata: Array<Stuff> = [];
+    public userPointsList: Array<UserPoints> = [];
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService) {
         this.userService.isAuthenticated(this);
@@ -28,8 +30,13 @@ export class UseractivityComponent implements LoggedInCallback {
             this.router.navigate(['/home/login']);
         } else {
             console.log("scanning DDB");
-            this.ddb.getLogEntries(this.logdata);
+            this.ddb.getUserPoints(this.userPointsList);
         }
+    }
+
+    movePoint() {
+        // Make request
+        '';
     }
 
 }

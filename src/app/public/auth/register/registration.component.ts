@@ -13,7 +13,7 @@ export class RegistrationUser {
  * the registration of the user.
  */
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './registration.html'
 })
 export class RegisterComponent implements CognitoCallback {

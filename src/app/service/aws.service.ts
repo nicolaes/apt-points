@@ -92,7 +92,7 @@ export class AwsUtil {
             if (!err) {
                 if (AwsUtil.firstLogin) {
                     // save the login info to DDB
-                    this.ddb.writeLogEntry("login");
+                    // this.ddb.writeLogEntry("login");
                     AwsUtil.firstLogin = false;
                 }
             }

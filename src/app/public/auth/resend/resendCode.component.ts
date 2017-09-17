@@ -3,7 +3,7 @@ import {UserRegistrationService} from "../../../service/user-registration.servic
 import {CognitoCallback} from "../../../service/cognito.service";
 import {Router} from "@angular/router";
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './resendCode.html'
 })
 export class ResendCodeComponent implements CognitoCallback {

@@ -8,13 +8,13 @@ aws_cmd=${aws_cmd:-aws}
 echo -n "Enter the name for your resources (must be all lowercase with no spaces) and press [ENTER]: "
 read ROOT_NAME
 
-BUCKET_NAME=cognitosample-$(echo "$ROOT_NAME" | tr '[:upper:]' '[:lower:]')
+BUCKET_NAME=$(echo "$ROOT_NAME" | tr '[:upper:]' '[:lower:]')
 TABLE_NAME=LoginTrail$ROOT_NAME
 
 ROLE_NAME_PREFIX=$ROOT_NAME
 POOL_NAME=$ROOT_NAME
 IDENTITY_POOL_NAME=$ROOT_NAME
-REGION=us-east-2
+REGION=eu-central-1
 EB_INSTANCE_TYPE=t2.small
 EB_PLATFORM=node.js
 CURR_DIR=$( cd $(dirname $0) ; pwd -P )

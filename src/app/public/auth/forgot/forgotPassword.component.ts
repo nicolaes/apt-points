@@ -4,7 +4,7 @@ import {UserLoginService} from "../../../service/user-login.service";
 import {CognitoCallback} from "../../../service/cognito.service";
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './forgotPassword.html'
 })
 export class ForgotPasswordStep1Component implements CognitoCallback {
@@ -32,7 +32,7 @@ export class ForgotPasswordStep1Component implements CognitoCallback {
 
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './forgotPasswordStep2.html'
 })
 export class ForgotPassword2Component implements CognitoCallback, OnInit, OnDestroy {

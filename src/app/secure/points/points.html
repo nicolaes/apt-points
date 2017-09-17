@@ -1,0 +1,16 @@
+<h1 class="page-header">APTpoints</h1>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped">
+        <tr>
+            <th>User</th>
+            <th>Points</th>
+            <th>Under vote</th>
+        </tr>
+        <tr *ngFor="let item of userPointsList" class="active">
+            <td>{{ item.userName }}</td>
+            <td>{{ item.points }}</td>
+            <td>{{ item.underVote }}</td>
+        </tr>
+    </table>
+</div>

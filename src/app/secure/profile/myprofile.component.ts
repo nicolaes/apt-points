@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './myprofile.html'
 })
 export class MyProfileComponent implements LoggedInCallback {

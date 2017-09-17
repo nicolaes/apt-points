@@ -5,7 +5,7 @@ import {CognitoCallback, LoggedInCallback} from "../../../service/cognito.servic
 import {DynamoDBService} from "../../../service/ddb.service";
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './login.html'
 })
 export class LoginComponent implements CognitoCallback, LoggedInCallback, OnInit {
@@ -46,7 +46,7 @@ export class LoginComponent implements CognitoCallback, LoggedInCallback, OnInit
                 this.router.navigate(['/home/newPassword']);
             }
         } else { //success
-            this.ddb.writeLogEntry("login");
+            // this.ddb.writeLogEntry("login");
             this.router.navigate(['/securehome']);
         }
     }

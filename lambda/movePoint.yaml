@@ -1,0 +1,26 @@
+﻿AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >-
+  A simple backend (read/write to DynamoDB) with a RESTful API endpoint using
+  Amazon API Gateway.
+Resources:
+  movePoint:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      CodeUri: .
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: 'arn:aws:iam::162455578391:role/service-role/movePoint'
+      Events:
+        Api1:
+          Type: Api
+          Properties:
+            Path: /movePoint
+            Method: ANY
+      Tags:
+        'lambda-console:blueprint': microservice-http-endpoint-python3

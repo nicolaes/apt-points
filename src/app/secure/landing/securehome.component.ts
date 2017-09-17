@@ -4,7 +4,7 @@ import {UserLoginService} from "../../service/user-login.service";
 import {LoggedInCallback} from "../../service/cognito.service";
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './secureHome.html'
     // styleUrls: ['/assets/css/sb-admin.css']
 })

@@ -5,7 +5,7 @@ import {UserLoginService} from "../../../service/user-login.service";
 import {LoggedInCallback} from "../../../service/cognito.service";
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     template: ''
 })
 export class LogoutComponent implements LoggedInCallback {
@@ -26,7 +26,7 @@ export class LogoutComponent implements LoggedInCallback {
 }
 
 @Component({
-    selector: 'awscognito-angular2-app',
+    selector: 'aws-apt-points',
     templateUrl: './confirmRegistration.html'
 })
 export class RegistrationConfirmationComponent implements OnInit, OnDestroy {
