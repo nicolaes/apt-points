@@ -1,7 +1,7 @@
 {
   "project": {
-    "name": "aws-cognito-quickstart",
-    "ejected": true
+    "version": "1.0.0-beta.14",
+    "name": "aws-cognito-quickstart"
   },
   "apps": [
     {
@@ -17,11 +17,11 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
+      "mobile": false,
       "styles": [
         "styles.css"
       ],
-      "scripts": [
-      ],
+      "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -29,6 +29,8 @@
       }
     }
   ],
+  "addons": [],
+  "packages": [],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"
@@ -40,6 +42,7 @@
     }
   },
   "defaults": {
-    "styleExt": "css"
+    "styleExt": "css",
+    "prefixInterfaces": false
   }
 }
