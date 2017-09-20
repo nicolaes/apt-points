@@ -6,6 +6,7 @@ import {Stuff} from "../secure/useractivity/useractivity.component";
 import {UserPoints} from "../secure/points/points.component";
 import * as AWS from "aws-sdk/global";
 import * as DynamoDB from "aws-sdk/clients/dynamodb";
+import {IotService} from './iot.service';
 
 /**
  * Created by Vladimir Budilov
@@ -14,8 +15,8 @@ import * as DynamoDB from "aws-sdk/clients/dynamodb";
 @Injectable()
 export class DynamoDBService {
 
-    constructor(public cognitoUtil: CognitoUtil) {
-        console.log("DynamoDBService: constructor");
+    constructor(public cognitoUtil: CognitoUtil, public iot: IotService) {
+        // console.log("DynamoDBService: constructor");
     }
 
     getAWS() {
@@ -53,13 +54,9 @@ export class DynamoDBService {
     }
 
     getUserPoints(mapArray: Array<UserPoints>) {
-        console.log("DynamoDBService: reading from DDB with creds - " + AWS.config.credentials);
+        console.log("DynamoDBService: getLogEntries from DDB with creds: ", AWS.config.credentials);
         var params = {
-            TableName: environment.ddbTableName,
-            // KeyConditionExpression: "userId = :userId",
-            // ExpressionAttributeValues: {
-            //     ":userId": this.cognitoUtil.getCognitoIdentity()
-            // }
+            TableName: environment.ddbTableName
         };
 
         var clientParams: any = {};
@@ -67,6 +64,7 @@ export class DynamoDBService {
             clientParams.endpoint = environment.dynamodb_endpoint;
         }
         var docClient = new DynamoDB.DocumentClient(clientParams);
+        var self = this;
         docClient.scan(params, (err, data) => {
             if (err) {
                 console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
@@ -80,6 +78,9 @@ export class DynamoDBService {
                         points: logitem.points,
                         underVote: logitem.underVote
                     });
+
+                    // subscribe to websocket
+                    self.iot.subscribeToPoints();
                 });
             }
         });
