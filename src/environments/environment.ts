@@ -19,4 +19,3 @@ export const environment = {
     dynamodb_endpoint: '',
     s3_endpoint: ''
 };
-

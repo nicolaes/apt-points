@@ -6,11 +6,16 @@
             <th>User</th>
             <th>Points</th>
             <th>Under vote</th>
+            <th>Actions</th>
         </tr>
         <tr *ngFor="let item of userPointsList" class="active">
-            <td>{{ item.userName }}</td>
+            <td>{{ item.userId }}</td>
             <td>{{ item.points }}</td>
             <td>{{ item.underVote }}</td>
+            <http-test></http-test>
         </tr>
     </table>
+
+
+
 </div>

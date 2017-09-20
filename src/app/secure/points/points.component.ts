@@ -14,11 +14,12 @@ export class UserPoints {
 
 @Component({
     selector: 'aws-apt-points',
-    templateUrl: './points.html'
+    templateUrl: './points.html',
 })
 export class PointsComponent implements LoggedInCallback {
 
     public userPointsList: Array<UserPoints> = [];
+    public msg: String = 'Vouch';
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService) {
         this.userService.isAuthenticated(this);

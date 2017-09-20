@@ -22,6 +22,8 @@ import {LogoutComponent, RegistrationConfirmationComponent} from "./public/auth/
 import {ResendCodeComponent} from "./public/auth/resend/resendCode.component";
 import {NewPasswordComponent} from "./public/auth/newpassword/newpassword.component";
 import {PointsComponent} from './secure/points/points.component';
+import {HTTPTestComponent} from "./secure/http/http-test.component";
+import {HttpTestService} from "./service/http-test.service";
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import {PointsComponent} from './secure/points/points.component';
         MyProfileComponent,
         SecureHomeComponent,
         JwtComponent,
-        AppComponent
+        AppComponent,
+        HTTPTestComponent
     ],
     imports: [
         BrowserModule,
@@ -56,8 +59,10 @@ import {PointsComponent} from './secure/points/points.component';
         DynamoDBService,
         UserRegistrationService,
         UserLoginService,
-        UserParametersService],
-    bootstrap: [AppComponent]
+        UserParametersService,
+        HttpTestService],
+    bootstrap: [AppComponent,
+                ]
 })
 export class AppModule {
 }
