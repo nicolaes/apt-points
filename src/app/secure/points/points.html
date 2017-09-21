@@ -12,7 +12,10 @@
             <td>{{ item.userId }}</td>
             <td>{{ item.points }}</td>
             <td>{{ item.underVote }}</td>
-            <http-test></http-test>
+            <button  type="button" class="btn btn-info btn-sm" (click)="startVote()">Start vote</button>
+            <button  type="button" class="btn btn-primary btn-sm" (click)="addVoucher()">Vouch</button>
+            <button  type="button" class="btn btn-primary btn-sm" (click)="removeVoucher()">Unvouch</button>
+            <p>Output: {{getData}}</p>
         </tr>
     </table>
 

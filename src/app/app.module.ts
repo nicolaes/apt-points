@@ -22,7 +22,6 @@ import {LogoutComponent, RegistrationConfirmationComponent} from "./public/auth/
 import {ResendCodeComponent} from "./public/auth/resend/resendCode.component";
 import {NewPasswordComponent} from "./public/auth/newpassword/newpassword.component";
 import {PointsComponent} from './secure/points/points.component';
-import {HTTPTestComponent} from "./secure/http/http-test.component";
 import {HttpTestService} from "./service/http-test.service";
 
 
@@ -44,8 +43,7 @@ import {HttpTestService} from "./service/http-test.service";
         MyProfileComponent,
         SecureHomeComponent,
         JwtComponent,
-        AppComponent,
-        HTTPTestComponent
+        AppComponent
     ],
     imports: [
         BrowserModule,
@@ -61,8 +59,7 @@ import {HttpTestService} from "./service/http-test.service";
         UserLoginService,
         UserParametersService,
         HttpTestService],
-    bootstrap: [AppComponent,
-                ]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
