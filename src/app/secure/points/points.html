@@ -9,16 +9,18 @@
             <th>Actions</th>
         </tr>
         <tr *ngFor="let item of userPointsList" class="active">
-            <td>{{ item.userId }}</td>
+            <td>{{ item.userName }}</td>
             <td>{{ item.points }}</td>
             <td>{{ item.underVote }}</td>
-            <button  type="button" class="btn btn-info btn-sm" (click)="startVote()">Start vote</button>
-            <button  type="button" class="btn btn-primary btn-sm" (click)="addVoucher()">Vouch</button>
-            <button  type="button" class="btn btn-primary btn-sm" (click)="removeVoucher()">Unvouch</button>
+            <td>
+                <button  type="button" class="btn btn-info btn-sm" (click)="startVote(item.userId)">Start vote+</button>
+                <button  type="button" class="btn btn-primary btn-sm" (click)="addVoucher(item.userId)">Vouch+</button><br>
+                <button  type="button" class="btn btn-info btn-sm" (click)="startRmvVote(item.userId)">Start vote-</button>
+                <button  type="button" class="btn btn-primary btn-sm" (click)="addRmvVoucher(item.userId)">Vouch-</button>
+            </td>
+            <button  type="button" class="btn btn-primary btn-sm" (click)="removeVoucher(item.userId)">Reset+</button>
+            <button  type="button" class="btn btn-primary btn-sm" (click)="addVoucher(item.userId)">Reset-</button>
             <p>Output: {{getData}}</p>
         </tr>
     </table>
-
-
-
 </div>

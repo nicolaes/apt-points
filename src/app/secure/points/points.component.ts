@@ -21,8 +21,12 @@ export class PointsComponent implements LoggedInCallback {
 
     public userPointsList: Array<UserPoints> = [];
     public getData: string;
+    public currentUserPoolId: string = this.userService.cognitoUtil.getCurrentUser()['pool'].userPoolId;
+    public idToken: string = this.userService.cognitoUtil.getCognitoCreds().params["Logins"]
+        ["cognito-idp.eu-central-1.amazonaws.com/" + this.currentUserPoolId];
 
-    constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService, public _httpService: HttpTestService) {
+    constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
+                public _httpService: HttpTestService) {
         this.userService.isAuthenticated(this);
         console.log("in UseractivityComponent");
     }
@@ -41,8 +45,8 @@ export class PointsComponent implements LoggedInCallback {
         '';
     }
 
-    addVoucher() {
-        this._httpService.addVoucher()
+    addVoucher(userId) {
+        this._httpService.addVoucher(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
@@ -50,8 +54,8 @@ export class PointsComponent implements LoggedInCallback {
             );
     }
 
-    removeVoucher() {
-        this._httpService.removeVoucher()
+    removeVoucher(userId) {
+        this._httpService.removeVoucher(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
@@ -59,8 +63,26 @@ export class PointsComponent implements LoggedInCallback {
             );
     }
 
-    startVote() {
-        this._httpService.startVote()
+    startVote(userId) {
+        this._httpService.startVote(this.idToken, userId)
+            .subscribe(
+                data => this.getData = JSON.stringify(data),
+                error => this.getData = error._body,
+                () => console.log("Finished")
+            );
+    }
+
+    startRmvVote(userId) {
+        this._httpService.startRmvVote(this.idToken, userId)
+            .subscribe(
+                data => this.getData = JSON.stringify(data),
+                error => this.getData = error._body,
+                () => console.log("Finished")
+            );
+    }
+
+    addRmvVoucher(userId) {
+        this._httpService.addRmvVoucher(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
