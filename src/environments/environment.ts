@@ -20,4 +20,3 @@ export const environment = {
     s3_endpoint: '',
     iot_endpoint: 'a2v2xuqqwcwo3h.iot.eu-central-1.amazonaws.com'
 };
-

@@ -22,6 +22,7 @@ import {LogoutComponent, RegistrationConfirmationComponent} from "./public/auth/
 import {ResendCodeComponent} from "./public/auth/resend/resendCode.component";
 import {NewPasswordComponent} from "./public/auth/newpassword/newpassword.component";
 import {PointsComponent} from './secure/points/points.component';
+import {HttpTestService} from "./service/http-test.service";
 import {IotService} from './service/iot.service';
 
 
@@ -58,6 +59,7 @@ import {IotService} from './service/iot.service';
         UserRegistrationService,
         UserLoginService,
         UserParametersService,
+        HttpTestService,
         IotService],
     bootstrap: [AppComponent]
 })

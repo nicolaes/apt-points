@@ -164,6 +164,7 @@ export class CognitoUtil {
 
     refresh(): void {
         this.getCurrentUser().getSession(function (err, session) {
+            console.log("in refresh");
             if (err) {
                 console.log("CognitoUtil: Can't set the credentials:" + err);
             }

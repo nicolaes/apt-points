@@ -72,6 +72,7 @@ export class DynamoDBService {
                 // print all the movies
                 console.log("DynamoDBService: Query succeeded.");
                 data.Items.forEach(function (logitem) {
+                    console.log(logitem)
                     mapArray.push({
                         userId: logitem.userId,
                         userName: logitem.userName,
