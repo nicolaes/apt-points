@@ -22,6 +22,7 @@ import {LogoutComponent, RegistrationConfirmationComponent} from "./public/auth/
 import {ResendCodeComponent} from "./public/auth/resend/resendCode.component";
 import {NewPasswordComponent} from "./public/auth/newpassword/newpassword.component";
 import {PointsComponent} from './secure/points/points.component';
+import {IotService} from './service/iot.service';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import {PointsComponent} from './secure/points/points.component';
         DynamoDBService,
         UserRegistrationService,
         UserLoginService,
-        UserParametersService],
+        UserParametersService,
+        IotService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
