@@ -20,7 +20,7 @@
                 <button  type="button" class="btn btn-info btn-sm" *ngIf="buttonsList[0]" (click)="startRmvVote(item.userId)">Start vote-</button>
                 <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[3]" (click)="addRmvVoucher(item.userId)">Vouch-</button>
                 <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[4]"(click)="addVoucher(item.userId)">Reset-</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="false" (click)="refreshV2(item, item.userId)">Refresh</button>
+                <button  type="button" class="btn btn-primary btn-sm" *ngIf="false" (click)="refreshUserData(item, item.userId)">Refresh</button>
             </td>
         </tr>
         <p>Output: {{getData}}</p>

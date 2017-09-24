@@ -1,10 +1,10 @@
-import {Component} from "@angular/core";
-import {UserLoginService} from "../../service/user-login.service";
-import {LoggedInCallback} from "../../service/cognito.service";
-import {Router} from "@angular/router";
-import {DynamoDBService} from "../../service/ddb.service";
-import {HttpTestService} from "../../service/http-test.service";
-import {CognitoUtil} from "../../service/cognito.service";
+import {Component} from '@angular/core';
+import {UserLoginService} from '../../service/user-login.service';
+import {LoggedInCallback} from '../../service/cognito.service';
+import {Router} from '@angular/router';
+import {DynamoDBService} from '../../service/ddb.service';
+import {VoteService} from '../../service/vote.service';
+import {IotService} from '../../service/iot.service';
 
 
 export class UserPoints {
@@ -24,16 +24,17 @@ export class PointsComponent implements LoggedInCallback {
     public userPointsListSync: Array<UserPoints> = [];
     public buttonsList: Array<boolean> = [];
     public getData: string;
-    public currentUserPoolId: string = this.userService.cognitoUtil.getCurrentUser()['pool'].userPoolId;
-    public idToken: string = this.userService.cognitoUtil.getCognitoCreds().params["Logins"]
-        ["cognito-idp.eu-central-1.amazonaws.com/" + this.currentUserPoolId];
+    // public currentUserPoolId: string = this.userService.cognitoUtil.getCurrentUser()['pool'].userPoolId;
+    // public idToken: string = this.userService.cognitoUtil.getCognitoCreds().params['Logins']
+    //     ['cognito-idp.eu-central-1.amazonaws.com/' + this.currentUserPoolId];
+    public idToken: string;
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
-                public _httpService: HttpTestService, public _cognitoUtil: CognitoUtil) {
+                public voteService: VoteService, private _iot: IotService) {
         this.userService.isAuthenticated(this);
-        console.log("in UseractivityComponent");
+
         this.loadButtons();
-     //   this.updateButtons();
+        // this.updateButtons();
     }
 
     loadButtons() {
@@ -51,20 +52,20 @@ export class PointsComponent implements LoggedInCallback {
 
     updateButtons() {
         let checkUnderVote = 0;
-        for (let item of this.userPointsList){
+        for (let item of this.userPointsList) {
             console.log('in for');
             if (item.underVote !== 0) {
                 checkUnderVote = item.underVote;
                 console.log(checkUnderVote);
             }
         }
-        if ( checkUnderVote > 0 ) {
+        if (checkUnderVote > 0) {
             this.buttonsList[0] = false;
             this.buttonsList[1] = true;
             this.buttonsList[2] = true;
             this.buttonsList[3] = false;
             this.buttonsList[4] = false;
-        } else if ( checkUnderVote < 0) {
+        } else if (checkUnderVote < 0) {
             this.buttonsList[0] = false;
             this.buttonsList[1] = false;
             this.buttonsList[2] = false;
@@ -83,8 +84,8 @@ export class PointsComponent implements LoggedInCallback {
         if (!isLoggedIn) {
             this.router.navigate(['/home/login']);
         } else {
-            console.log("scanning DDB");
-            this.ddb.getUserPoints(this.userPointsList);
+            console.log('scanning DDB');
+            this.updateUserPointsList();
         }
     }
 
@@ -92,10 +93,15 @@ export class PointsComponent implements LoggedInCallback {
         // Make request
         '';
     }
+
     updateUserPointsList() {
         this.userPointsList.length = 0;
-        this.ddb.getUserPoints(this.userPointsList);
-
+        this.ddb.getUserPoints(this.userPointsList).then(() => {
+            // subscribe to websocket
+            this._iot.subscribeToPoints((userId: string) => {
+                console.log('userId changed', userId);
+            });
+        });
     }
 
     refreshData() {
@@ -107,59 +113,58 @@ export class PointsComponent implements LoggedInCallback {
     }
 
 
-    refreshV2(_userId) {
-        console.log("ref2");
-        this.ddb.getUserPoints(this.userPointsListSync);
-        console.log(this.userPointsList.find( myObj => myObj.userId === _userId));
-        this.userPointsList.filter( x => x === _userId)[0] = this.userPointsListSync.find( myObj => myObj.userId === _userId);
+    refreshUserData(_userId) {
+        // console.log('ref2');
+        // this.ddb.getUserPoints(this.userPointsListSync);
+        // console.log(this.userPointsList.find(myObj => myObj.userId === _userId));
+        // this.userPointsList.filter(x => x === _userId)[0] = this.userPointsListSync.find(myObj => myObj.userId === _userId);
     }
 
     addVoucher(userId) {
-        this._httpService.addVoucher(this.idToken, userId)
-            .subscribe(
-                data => this.getData = JSON.stringify(data),
-                error => this.getData = error._body,
-                () => console.log("Finished")
-            );
+        this.voteService.addVoucher(userId)
+            .subscribe(data => {
+                this.getData = JSON.stringify(data);
+                this._iot.publishUserUpdatedEvent(userId);
+            });
         this.updateButtons();
     }
 
     removeVoucher(userId) {
-        this._httpService.removeVoucher(this.idToken, userId)
+        this.voteService.removeVoucher(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
-                () => console.log("Finished")
+                () => console.log('Finished')
             );
         this.updateButtons();
     }
 
     startVote(userId) {
-        this._httpService.startVote(this.idToken, userId)
+        this.voteService.startVote(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
-                () => console.log("Finished")
+                () => console.log('Finished')
             );
         this.updateButtons();
     }
 
     startRmvVote(userId) {
-        this._httpService.startRmvVote(this.idToken, userId)
+        this.voteService.startRmvVote(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
-                () => console.log("Finished")
+                () => console.log('Finished')
             );
         this.updateButtons();
     }
 
     addRmvVoucher(userId) {
-        this._httpService.addRmvVoucher(this.idToken, userId)
+        this.voteService.addRmvVoucher(this.idToken, userId)
             .subscribe(
                 data => this.getData = JSON.stringify(data),
                 error => this.getData = error._body,
-                () => console.log("Finished")
+                () => console.log('Finished')
             );
         this.updateButtons();
     }

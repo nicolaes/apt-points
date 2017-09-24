@@ -53,8 +53,8 @@ export class DynamoDBService {
         }
     }
 
-    getUserPoints(mapArray: Array<UserPoints>) {
-        console.log("DynamoDBService: getLogEntries from DDB with creds: ", AWS.config.credentials);
+    getUserPoints(userPoints: Array<UserPoints>): Promise<any> {
+        console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
         var params = {
             TableName: environment.ddbTableName
         };
@@ -64,28 +64,20 @@ export class DynamoDBService {
             clientParams.endpoint = environment.dynamodb_endpoint;
         }
         var docClient = new DynamoDB.DocumentClient(clientParams);
-        var self = this;
-        docClient.scan(params, (err, data) => {
+        return docClient.scan(params, (err, data) => {
             if (err) {
                 console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
             } else {
-                // print all the movies
-                console.log("DynamoDBService: Query succeeded.");
-                data.Items.forEach(function (logitem) {
-                    console.log(logitem)
-                    mapArray.push({
-                        userId: logitem.userId,
-                        userName: logitem.userName,
-                        points: logitem.points,
-                        underVote: logitem.underVote
+                data.Items.forEach(userData => {
+                    userPoints.push({
+                        userId: userData.userId,
+                        userName: userData.userName,
+                        points: userData.points,
+                        underVote: userData.underVote
                     });
-
-                    // subscribe to websocket
-                    self.iot.subscribeToPoints();
                 });
             }
-        });
-
+        }).promise();
     }
 
     writeLogEntry(type: string) {
