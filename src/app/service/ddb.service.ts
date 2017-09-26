@@ -7,6 +7,7 @@ import {UserPoints} from "../secure/points/points.component";
 import * as AWS from "aws-sdk/global";
 import * as DynamoDB from "aws-sdk/clients/dynamodb";
 import {IotService} from './iot.service';
+import {GetItemInput} from 'aws-sdk/clients/dynamodb';
 
 /**
  * Created by Vladimir Budilov
@@ -14,6 +15,7 @@ import {IotService} from './iot.service';
 
 @Injectable()
 export class DynamoDBService {
+    docClient: DynamoDB.DocumentClient;
 
     constructor(public cognitoUtil: CognitoUtil, public iot: IotService) {
         // console.log("DynamoDBService: constructor");
@@ -54,7 +56,7 @@ export class DynamoDBService {
     }
 
     getUserPoints(userPoints: Array<UserPoints>): Promise<any> {
-        console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
+        // console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
         var params = {
             TableName: environment.ddbTableName
         };
@@ -63,8 +65,8 @@ export class DynamoDBService {
         if (environment.dynamodb_endpoint) {
             clientParams.endpoint = environment.dynamodb_endpoint;
         }
-        var docClient = new DynamoDB.DocumentClient(clientParams);
-        return docClient.scan(params, (err, data) => {
+        this.docClient = new DynamoDB.DocumentClient(clientParams);
+        return this.docClient.scan(params, (err, data) => {
             if (err) {
                 console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
             } else {
@@ -76,6 +78,37 @@ export class DynamoDBService {
                         underVote: userData.underVote
                     });
                 });
+            }
+        }).promise();
+    }
+
+    updateUserById(userPoints: Array<UserPoints>, userId: string): Promise<any> {
+        const updatedUser: UserPoints = userPoints.find(user => user.userId === userId);
+        if (!updatedUser) {
+            throw new Error('User not found ' + userId);
+        }
+
+        const query = {
+            TableName: environment.ddbTableName,
+            Key: {userId}
+            // KeyConditionExpression: 'userId = :userId',
+            // ExpressionAttributeValues: {':userId': userId}
+        };
+
+        // const docClient = new DynamoDB.DocumentClient(clientParams);
+        return this.docClient.query(query, (err, data) => {
+            if (err) {
+                console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+                console.log('query', data);
+                // data.Items.forEach(userData => {
+                //     userPoints.push({
+                //         userId: userData.userId,
+                //         userName: userData.userName,
+                //         points: userData.points,
+                //         underVote: userData.underVote
+                //     });
+                // });
             }
         }).promise();
     }

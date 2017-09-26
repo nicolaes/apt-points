@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http} from '@angular/http';
-import * as AWS from 'aws-sdk/global';
 import {environment} from '../../environments/environment';
 import {CognitoUtil} from './cognito.service';
 import * as Rx from 'rxjs';
@@ -14,10 +13,6 @@ export class VoteService {
     constructor(private _http: Http, private _cognitoUtil: CognitoUtil) {
     }
 
-    private getAWS() {
-        return AWS;
-    }
-
     private movePoint(userId: string, direction: string, vouching: boolean) {
         return Rx.Observable
             .fromPromise(this._cognitoUtil.getIdTokenPromise())
@@ -28,10 +23,10 @@ export class VoteService {
                     'Authorization': idToken
                 });
                 const search = {
-                    TableName: 'LoginTrailaptpoints',
-                    userId: userId,
-                    direction: 'up',
-                    vouching: '1',
+                    TableName: environment.ddbTableName,
+                    userId,
+                    direction,
+                    vouching: vouching ? '1' : '0',
                 };
                 return this._http.get(environment.lambda_endpoint + 'movePoint', {headers, search})
                     .map(res => res.json());
@@ -43,42 +38,14 @@ export class VoteService {
     }
 
     startVote(idToken, userId) {
-        let headers = new Headers({'Access-Control-Allow-Origin': '*', 'Authorization': idToken});
-        let url = this.mainApi + '&userId=' + userId
-            + '&direction=up';
-        return this._http.get(url, {headers: headers})
-            .map(res => res.json());
+        return this.movePoint(userId, 'up', false);
     }
 
     removeVoucher(idToken, userId) {
-        let headers = new Headers({'Access-Control-Allow-Origin': '*', 'Authorization': idToken});
-        let url = this.mainApi + '&userId=' + userId
-            + '&direction=down'
-            + '&vouching=1';
-        return this._http.get(
-            url, {headers: headers}
-        )
-            .map(res => res.json());
+        return this.movePoint(userId, 'down', true);
     }
 
     startRmvVote(idToken, userId) {
-        let headers = new Headers({'Access-Control-Allow-Origin': '*', 'Authorization': idToken});
-        let url = this.mainApi + '&userId=' + userId
-            + '&direction=down';
-        return this._http.get(
-            url, {headers: headers}
-        )
-            .map(res => res.json());
-    }
-
-    addRmvVoucher(idToken, userId) {
-        let headers = new Headers({'Access-Control-Allow-Origin': '*', 'Authorization': idToken});
-        let url = this.mainApi + '&userId=' + userId
-            + '&direction=down'
-            + '&vouching=1';
-        return this._http.get(
-            url, {headers: headers}
-        )
-            .map(res => res.json());
+        return this.movePoint(userId, 'down', false);
     }
 }

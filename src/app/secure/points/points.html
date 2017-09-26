@@ -18,13 +18,13 @@
                 <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[2]" (click)="removeVoucher(item.userId)">Reset+</button>
                 <br>
                 <button  type="button" class="btn btn-info btn-sm" *ngIf="buttonsList[0]" (click)="startRmvVote(item.userId)">Start vote-</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[3]" (click)="addRmvVoucher(item.userId)">Vouch-</button>
+                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[3]" (click)="removeVoucher(item.userId)">Vouch-</button>
                 <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[4]"(click)="addVoucher(item.userId)">Reset-</button>
                 <button  type="button" class="btn btn-primary btn-sm" *ngIf="false" (click)="refreshUserData(item, item.userId)">Refresh</button>
             </td>
         </tr>
         <p>Output: {{getData}}</p>
-        <button  type="button" class="btn btn-primary btn-sm" (click)="refreshData()">Refresh Data</button>
-        <button  type="button" class="btn btn-primary btn-sm" (click)="refreshButtons()">Refresh Buttons</button>
+
+        <button  type="button" class="btn btn-primary btn-sm" (click)="updateButtons()">Refresh Buttons</button>
     </table>
 </div>

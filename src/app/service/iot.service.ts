@@ -23,19 +23,20 @@ export class IotService {
             });
         }
 
-        this.client.on('message', (topic: string, message: {userId: string}) => {
-            if (topic === 'pointChange' && message.userId) {
+        this.client.on('message', (topic: string, messageStr: string) => {
+            const message: {userId: string} = JSON.parse(messageStr);
+            if (topic === 'pointChange' && message.userId != null) {
                 callback(message.userId);
             }
         });
     }
 
-    publishUserUpdatedEvent(userId) {
+    publishUserUpdatedEvent(userId: string) {
         if (!this.client) {
             console.error('Can not publish - WebSocket not opened yet');
         }
 
-        this.client.publish('pointChange', userId);
+        this.client.publish('pointChange', JSON.stringify({userId}));
     }
 
     private createMqttClient() {
