@@ -14,6 +14,8 @@ export class UserPoints {
     public underVote: number;
 }
 
+export type VoteDirection = 'up' | 'down';
+
 @Component({
     selector: 'aws-apt-points',
     templateUrl: './points.html',
@@ -21,7 +23,6 @@ export class UserPoints {
 export class PointsComponent implements LoggedInCallback {
 
     public userPointsList: Array<UserPoints> = [];
-    public userPointsListSync: Array<UserPoints> = [];
     public buttonsList: Array<boolean> = [];
     public getData: string;
     // public currentUserPoolId: string = this.userService.cognitoUtil.getCurrentUser()['pool'].userPoolId;
@@ -34,7 +35,6 @@ export class PointsComponent implements LoggedInCallback {
         this.userService.isAuthenticated(this);
 
         this.loadButtons();
-        // this.updateButtons();
     }
 
     loadButtons() {
@@ -50,7 +50,7 @@ export class PointsComponent implements LoggedInCallback {
         this.buttonsList.push(rstRmvButton);
     }
 
-    updateButtons() {
+    updateButtons = () => {
         let checkUnderVote = 0;
         for (let item of this.userPointsList) {
             console.log('in for');
@@ -84,11 +84,7 @@ export class PointsComponent implements LoggedInCallback {
         if (!isLoggedIn) {
             this.router.navigate(['/home/login']);
         } else {
-            // this.userPointsList.length = 0;
-            // this.ddb.getUserPoints(this.userPointsList).then(this.afterUserPoints);
-
-            setTimeout(() => this.ddb.getUserPoints(this.userPointsList), 0);
-            setTimeout(() => this.ddb.getUserPoints(this.userPointsList), 1000);
+            this.ddb.getUserPoints(this.userPointsList, this.afterUserPoints);
         }
     }
 
@@ -96,15 +92,22 @@ export class PointsComponent implements LoggedInCallback {
         // subscribe to websocket
         this._iot.subscribeToPoints((userId: string) => {
             console.log('userId changed', userId);
-            // this.ddb.getUserPoints(this.userPointsList);
+            this.ddb.updateUserPointsById(this.userPointsList, userId);
         });
     }
 
-    refreshUserData(_userId) {
-        // console.log('ref2');
-        // this.ddb.getUserPoints(this.userPointsListSync);
-        // console.log(this.userPointsList.find(myObj => myObj.userId === _userId));
-        // this.userPointsList.filter(x => x === _userId)[0] = this.userPointsListSync.find(myObj => myObj.userId === _userId);
+    swipeLeft(userId) {
+        this.initiateVote(userId, 'down');
+    }
+
+    swipeRight(userId) {
+        this.initiateVote(userId, 'up');
+    }
+
+    initiateVote(userId: string, direction: VoteDirection) {
+        const user = this.userPointsList.find(u => u.userId === userId);
+        this.voteService.movePoint(userId, direction, user.underVote !== 0)
+            .subscribe(this.voteSuccess(userId), this.voteError);
     }
 
     addVoucher(userId) {
@@ -137,6 +140,6 @@ export class PointsComponent implements LoggedInCallback {
     }
 
     voteError = (err: any) => {
-        this.getData = err;
+        this.getData = err.text();
     }
 }

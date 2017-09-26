@@ -1,11 +1,11 @@
-import {Injectable} from "@angular/core";
-import {CognitoUtil} from "./cognito.service";
-import {environment} from "../../environments/environment";
+import {Injectable} from '@angular/core';
+import {CognitoUtil} from './cognito.service';
+import {environment} from '../../environments/environment';
 
-import {Stuff} from "../secure/useractivity/useractivity.component";
-import {UserPoints} from "../secure/points/points.component";
-import * as AWS from "aws-sdk/global";
-import * as DynamoDB from "aws-sdk/clients/dynamodb";
+import {Stuff} from '../secure/useractivity/useractivity.component';
+import {UserPoints} from '../secure/points/points.component';
+import * as AWS from 'aws-sdk/global';
+import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import {IotService} from './iot.service';
 import {GetItemInput} from 'aws-sdk/clients/dynamodb';
 
@@ -26,12 +26,12 @@ export class DynamoDBService {
     }
 
     getLogEntries(mapArray: Array<Stuff>) {
-        console.log("DynamoDBService: reading from DDB with creds - " + AWS.config.credentials);
+        console.log('DynamoDBService: reading from DDB with creds - ' + AWS.config.credentials);
         var params = {
             TableName: environment.ddbTableName,
-            KeyConditionExpression: "userId = :userId",
+            KeyConditionExpression: 'userId = :userId',
             ExpressionAttributeValues: {
-                ":userId": this.cognitoUtil.getCognitoIdentity()
+                ':userId': this.cognitoUtil.getCognitoIdentity()
             }
         };
 
@@ -44,10 +44,10 @@ export class DynamoDBService {
 
         function onQuery(err, data) {
             if (err) {
-                console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
+                console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
             } else {
                 // print all the movies
-                console.log("DynamoDBService: Query succeeded.");
+                console.log('DynamoDBService: Query succeeded.');
                 data.Items.forEach(function (logitem) {
                     mapArray.push({type: logitem.type, date: logitem.activityDate});
                 });
@@ -55,7 +55,7 @@ export class DynamoDBService {
         }
     }
 
-    getUserPoints(userPoints: Array<UserPoints>): Promise<any> {
+    getUserPoints(userPointsList: Array<UserPoints>, callback: Function) {
         // console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
         var params = {
             TableName: environment.ddbTableName
@@ -65,70 +65,68 @@ export class DynamoDBService {
         if (environment.dynamodb_endpoint) {
             clientParams.endpoint = environment.dynamodb_endpoint;
         }
-        this.docClient = new DynamoDB.DocumentClient(clientParams);
-        return this.docClient.scan(params, (err, data) => {
+        const docClient = new DynamoDB.DocumentClient(clientParams);
+        return docClient.scan(params, (err, data) => {
             if (err) {
-                console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
+                console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
             } else {
-                data.Items.forEach(userData => {
-                    userPoints.push({
+                data.Items.forEach((userData: any) => {
+                    userPointsList.push({
                         userId: userData.userId,
                         userName: userData.userName,
                         points: userData.points,
                         underVote: userData.underVote
                     });
                 });
+
+                callback();
             }
-        }).promise();
+        });
     }
 
-    updateUserById(userPoints: Array<UserPoints>, userId: string): Promise<any> {
+    updateUserPointsById(userPoints: Array<UserPoints>, userId: string) {
         const updatedUser: UserPoints = userPoints.find(user => user.userId === userId);
         if (!updatedUser) {
             throw new Error('User not found ' + userId);
         }
 
-        const query = {
+        var clientParams: any = {};
+        if (environment.dynamodb_endpoint) {
+            clientParams.endpoint = environment.dynamodb_endpoint;
+        }
+
+        const params: GetItemInput = {
             TableName: environment.ddbTableName,
             Key: {userId}
-            // KeyConditionExpression: 'userId = :userId',
-            // ExpressionAttributeValues: {':userId': userId}
         };
 
-        // const docClient = new DynamoDB.DocumentClient(clientParams);
-        return this.docClient.query(query, (err, data) => {
+        const docClient = new DynamoDB.DocumentClient(clientParams);
+        return docClient.get(params, (err, data) => {
             if (err) {
-                console.error("DynamoDBService: Unable to query the table. Error JSON:", JSON.stringify(err, null, 2));
+                console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
             } else {
-                console.log('query', data);
-                // data.Items.forEach(userData => {
-                //     userPoints.push({
-                //         userId: userData.userId,
-                //         userName: userData.userName,
-                //         points: userData.points,
-                //         underVote: userData.underVote
-                //     });
-                // });
+                updatedUser.points = data.Item.points;
+                updatedUser.underVote = data.Item.underVote;
             }
-        }).promise();
+        });
     }
 
     writeLogEntry(type: string) {
         try {
             let date = new Date().toString();
-            console.log("DynamoDBService: Writing log entry. Type:" + type + " ID: " +
-                this.cognitoUtil.getCognitoIdentity() + " Date: " + date);
+            console.log('DynamoDBService: Writing log entry. Type:' + type + ' ID: ' +
+                this.cognitoUtil.getCognitoIdentity() + ' Date: ' + date);
             this.write(this.cognitoUtil.getCognitoIdentity(), date, type);
         } catch (exc) {
-            console.log("DynamoDBService: Couldn't write to DDB");
+            console.log('DynamoDBService: Couldn\'t write to DDB');
         }
 
     }
 
     write(data: string, date: string, type: string): void {
-        console.log("DynamoDBService: writing " + type + " entry");
+        console.log('DynamoDBService: writing ' + type + ' entry');
 
-        let clientParams:any = {
+        let clientParams: any = {
             params: {TableName: environment.ddbTableName}
         };
         if (environment.dynamodb_endpoint) {
@@ -147,7 +145,7 @@ export class DynamoDBService {
                 }
             };
         DDB.putItem(itemParams, function (result) {
-            console.log("DynamoDBService: wrote entry: " + JSON.stringify(result));
+            console.log('DynamoDBService: wrote entry: ' + JSON.stringify(result));
         });
     }
 

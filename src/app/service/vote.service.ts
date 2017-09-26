@@ -13,7 +13,7 @@ export class VoteService {
     constructor(private _http: Http, private _cognitoUtil: CognitoUtil) {
     }
 
-    private movePoint(userId: string, direction: string, vouching: boolean) {
+    movePoint(userId: string, direction: string, vouching: boolean) {
         return Rx.Observable
             .fromPromise(this._cognitoUtil.getIdTokenPromise())
             .mergeMap(idToken => {

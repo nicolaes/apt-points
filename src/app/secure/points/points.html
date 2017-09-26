@@ -13,14 +13,8 @@
             <td>{{ item.points }}</td>
             <td>{{ item.underVote }}</td>
             <td>
-                <button  type="button" class="btn btn-info btn-sm" *ngIf="buttonsList[0]" (click)="startVote(item.userId)">Start vote+</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[1]" (click)="addVoucher(item.userId)">Vouch+</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[2]" (click)="removeVoucher(item.userId)">Reset+</button>
-                <br>
-                <button  type="button" class="btn btn-info btn-sm" *ngIf="buttonsList[0]" (click)="startRmvVote(item.userId)">Start vote-</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[3]" (click)="removeVoucher(item.userId)">Vouch-</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[4]"(click)="addVoucher(item.userId)">Reset-</button>
-                <button  type="button" class="btn btn-primary btn-sm" *ngIf="false" (click)="refreshUserData(item, item.userId)">Refresh</button>
+                <button type="button" class="btn btn-danger btn-sm" *ngIf="buttonsList[0]" (click)="swipeLeft(item.userId)">Swipe Left (-)</button>
+                <button type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[1]" (click)="swipeRight(item.userId)">Swipe Right (+)</button>
             </td>
         </tr>
         <p>Output: {{getData}}</p>
