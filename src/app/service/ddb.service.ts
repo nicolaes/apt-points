@@ -58,7 +58,9 @@ export class DynamoDBService {
     getUserPoints(userPointsList: Array<UserPoints>, callback: Function) {
         // console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
         var params = {
-            TableName: environment.ddbTableName
+            TableName: environment.ddbTableName,
+            FilterExpression : 'confirmed = :confirmed',
+            ExpressionAttributeValues : {':confirmed' : true}
         };
 
         var clientParams: any = {};

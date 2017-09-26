@@ -9,16 +9,14 @@
             <th>Actions</th>
         </tr>
         <tr *ngFor="let item of userPointsList" class="active">
-            <td>{{ item.userId }}</td>
+            <td>{{ item.userName }}</td>
             <td>{{ item.points }}</td>
             <td>{{ item.underVote }}</td>
             <td>
-                <button type="button" class="btn btn-danger btn-sm" *ngIf="buttonsList[0]" (click)="swipeLeft(item.userId)">Swipe Left (-)</button>
-                <button type="button" class="btn btn-primary btn-sm" *ngIf="buttonsList[1]" (click)="swipeRight(item.userId)">Swipe Right (+)</button>
+                <button type="button" class="btn btn-danger btn-sm" (click)="swipeLeft(item.userId)">Swipe Left (-)</button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="swipeRight(item.userId)">Swipe Right (+)</button>
             </td>
         </tr>
-        <p>Output: {{getData}}</p>
-
-        <button  type="button" class="btn btn-primary btn-sm" (click)="updateButtons()">Refresh Buttons</button>
+        <p>Error: {{errorMessage}}</p>
     </table>
 </div>

@@ -14,7 +14,7 @@ export class IotService {
         return AWS;
     }
 
-    subscribeToPoints(callback: Function): void {
+    subscribeToPointUpdates(callback: Function): void {
         if (!this.client) {
             this.client = this.createMqttClient();
             this.client.on('connect', () => {
