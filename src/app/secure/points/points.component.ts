@@ -78,5 +78,10 @@ export class PointsComponent implements LoggedInCallback {
 
     voteError = (userId: string) => (err: any) => {
         this.errorMessage = err.text();
+        this.openErrorPopup();
+    }
+
+    openErrorPopup() {
+        document.getElementById("errorDetected").click();
     }
 }
