@@ -16,7 +16,7 @@ import {PointsComponent} from './secure/points/points.component';
 const homeRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/home',
+        redirectTo: '/home/login',
         pathMatch: 'full'
     },
     {

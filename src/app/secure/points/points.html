@@ -20,3 +20,10 @@
         <p>Error: {{errorMessage}}</p>
     </table>
 </div>
+
+<div *ngFor="let item of userPointsList" class="active">
+    <div class="well well-lg">
+        <div>{{item.userName}}</div><br/>
+        <span>Points: {{item.points}}</span> <span class="pull-right">Votes: {{item.underVote}}</span>
+    </div>
+</div>
