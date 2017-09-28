@@ -10,6 +10,8 @@
             <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote <3 && item.underVote>-3}" id="arrow-vote-1"></div><br/>
             <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote <2 && item.underVote>-2}" id="arrow-vote-2"></div><br/>
             <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote==0}" id="arrow-vote-3"></div><br/>
+            <div [ngClass]="{'fa fa-chevron-circle-right': item.underVote>0}"></div>
+            <div [ngClass]="{'fa fa-chevron-circle-left': item.underVote<0}"></div>
         </div><br/>
 
         <span>Points: {{item.points}}</span> <span class="pull-right">Votes: {{item.underVote}}</span>
