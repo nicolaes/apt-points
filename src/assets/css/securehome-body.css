@@ -1,0 +1,30 @@
+#header-image {
+    margin-bottom: 20px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.white-ball {
+    background-color: white;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.chocolate-ball-inactive {
+    content: url("../img/chocolate-ball.ico");
+    width: 18px;
+    height: 18px;
+    opacity: 0.1 ;
+}
+
+.chocolate-ball-active {
+    content: url("../img/chocolate-ball.ico");
+    width: 18px;
+    height: 18px;
+}
+
+.well-lg {
+    padding: 9px;
+    font-size: 20px;
+}
