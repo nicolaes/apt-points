@@ -28,3 +28,28 @@
     padding: 9px;
     font-size: 20px;
 }
+
+#arrow-vote-1 {
+    position: relative;
+    margin: 0px 0px -20px 0px;
+    font-size: 30px;
+    color: dodgerblue;
+}
+
+.inactive {
+    opacity: 0.2;
+}
+
+#arrow-vote-2 {
+    position: relative;
+    margin: -20px 0px -20px 0px;
+    font-size: 30px;
+    color: dodgerblue;
+}
+
+#arrow-vote-3 {
+    position: relative;
+    margin: -40px 0px -20px 0px;
+    font-size: 30px;
+    color: dodgerblue;
+}

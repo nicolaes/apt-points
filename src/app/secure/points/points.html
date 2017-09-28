@@ -7,6 +7,9 @@
             <span [ngClass]="{'chocolate-ball-active': item.points>0, 'chocolate-ball-inactive': item.points <= 0}"></span>
             <span [ngClass]="{'chocolate-ball-active': item.points>1, 'chocolate-ball-inactive': item.points <= 1}"></span>
             <span [ngClass]="{'chocolate-ball-active': item.points>2, 'chocolate-ball-inactive': item.points <= 2}"></span>
+            <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote <3 && item.underVote>-3}" id="arrow-vote-1"></div><br/>
+            <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote <2 && item.underVote>-2}" id="arrow-vote-2"></div><br/>
+            <div class="fa fa-angle-up pull-right" [ngClass]="{'inactive': item.underVote==0}" id="arrow-vote-3"></div><br/>
         </div><br/>
 
         <span>Points: {{item.points}}</span> <span class="pull-right">Votes: {{item.underVote}}</span>
