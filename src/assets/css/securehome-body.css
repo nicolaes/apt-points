@@ -32,7 +32,7 @@
 }
 
 .inactive {
-    opacity: 0.2;
+    opacity: 0.25;
 }
 
 #arrow-vote-1 {
@@ -54,4 +54,12 @@
     margin: -80px 0px -20px 0px;
     font-size: 35px;
     color: dodgerblue;
+}
+
+.upVoting {
+    background: rgba(215, 44, 44, 0.4);
+}
+
+.downVoting {
+    background: rgba(44, 217, 44, 0.4);
 }
