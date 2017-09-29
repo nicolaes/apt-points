@@ -88,13 +88,17 @@ export class AwsUtil {
 
         AWS.config.credentials = creds;
 
-        creds.get(function (err) {
+        creds.get(err => {
             if (!err) {
                 if (AwsUtil.firstLogin) {
                     // save the login info to DDB
                     // this.ddb.writeLogEntry("login");
                     AwsUtil.firstLogin = false;
                 }
+
+                // var cognitoCreds = this.cognitoUtil.getCognitoCreds();
+                // console.log('cognitoCreds', cognitoCreds);
+
             }
         });
     }
