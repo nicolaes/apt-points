@@ -23,6 +23,7 @@ export type VoteDirection = 'up' | 'down';
 export class PointsComponent implements LoggedInCallback {
     public userPointsList: Array<UserPoints> = [];
     public errorMessage: string;
+    SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
                 public voteService: VoteService, private _iot: IotService) {
@@ -52,6 +53,17 @@ export class PointsComponent implements LoggedInCallback {
         this.initiateVote(userId, 'up');
     }
 
+    swipe(userId: string, action = this.SWIPE_ACTION.RIGHT) {
+        if (action === this.SWIPE_ACTION.RIGHT) {
+            console.log("swipe right");
+            this.swipeRight(userId);
+        }
+        if (action === this.SWIPE_ACTION.LEFT) {
+            console.log("swipe left");
+            this.swipeLeft(userId);
+        }
+    }
+
     initiateVote(userId: string, direction: VoteDirection) {
         const user = this.userPointsList.find(u => u.userId === userId);
         this.voteService.movePoint(userId, direction, user.underVote !== 0)
@@ -66,5 +78,10 @@ export class PointsComponent implements LoggedInCallback {
 
     voteError = (userId: string) => (err: any) => {
         this.errorMessage = err.text();
+        this.openErrorPopup();
+    }
+
+    openErrorPopup() {
+        document.getElementById("errorDetected").click();
     }
 }

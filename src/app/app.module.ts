@@ -24,6 +24,8 @@ import {NewPasswordComponent} from "./public/auth/newpassword/newpassword.compon
 import {PointsComponent} from './secure/points/points.component';
 import {VoteService} from "./service/vote.service";
 import {IotService} from './service/iot.service';
+import 'hammerjs';
+import 'hammer-timejs';
 
 
 @NgModule({
