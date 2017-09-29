@@ -54,13 +54,13 @@ export class PointsComponent implements LoggedInCallback {
     }
 
     swipe(userId: string, action = this.SWIPE_ACTION.RIGHT) {
-        if (action === this.SWIPE_ACTION.RIGHT) {
-            console.log("swipe right");
-            this.swipeRight(userId);
-        }
-        if (action === this.SWIPE_ACTION.LEFT) {
-            console.log("swipe left");
-            this.swipeLeft(userId);
+        switch (action) {
+            case this.SWIPE_ACTION.RIGHT:
+                this.swipeRight(userId);
+                break;
+            case this.SWIPE_ACTION.LEFT:
+                this.swipeLeft(userId);
+                break;
         }
     }
 
