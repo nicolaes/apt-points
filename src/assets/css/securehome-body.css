@@ -2,6 +2,7 @@
     margin-bottom: 20px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+    width: 100%;
 }
 
 .white-ball {
@@ -27,29 +28,30 @@
 .well-lg {
     padding: 9px;
     font-size: 20px;
-}
-
-#arrow-vote-1 {
-    position: relative;
-    margin: 0px 0px -20px 0px;
-    font-size: 30px;
-    color: dodgerblue;
+    height: 70px;
 }
 
 .inactive {
     opacity: 0.2;
 }
 
+#arrow-vote-1 {
+    position: relative;
+    margin: -40px 0px -20px 0px;
+    font-size: 35px;
+    color: dodgerblue;
+}
+
 #arrow-vote-2 {
     position: relative;
-    margin: -20px 0px -20px 0px;
-    font-size: 30px;
+    margin: -60px 0px -20px 0px;
+    font-size: 35px;
     color: dodgerblue;
 }
 
 #arrow-vote-3 {
     position: relative;
-    margin: -40px 0px -20px 0px;
-    font-size: 30px;
+    margin: -80px 0px -20px 0px;
+    font-size: 35px;
     color: dodgerblue;
 }
