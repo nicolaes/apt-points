@@ -1,0 +1,65 @@
+#header-image {
+    margin-bottom: 20px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    width: 100%;
+}
+
+.white-ball {
+    background-color: white;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.chocolate-ball-inactive {
+    content: url("../img/chocolate-ball.ico");
+    width: 18px;
+    height: 18px;
+    opacity: 0.1 ;
+}
+
+.chocolate-ball-active {
+    content: url("../img/chocolate-ball.ico");
+    width: 18px;
+    height: 18px;
+}
+
+.well-lg {
+    padding: 9px;
+    font-size: 20px;
+    height: 70px;
+}
+
+.inactive {
+    opacity: 0.25;
+}
+
+#arrow-vote-1 {
+    position: relative;
+    margin: -40px 0px -20px 0px;
+    font-size: 35px;
+    color: dodgerblue;
+}
+
+#arrow-vote-2 {
+    position: relative;
+    margin: -60px 0px -20px 0px;
+    font-size: 35px;
+    color: dodgerblue;
+}
+
+#arrow-vote-3 {
+    position: relative;
+    margin: -80px 0px -20px 0px;
+    font-size: 35px;
+    color: dodgerblue;
+}
+
+.upVoting {
+    background: rgba(215, 44, 44, 0.4);
+}
+
+.downVoting {
+    background: rgba(44, 217, 44, 0.4);
+}

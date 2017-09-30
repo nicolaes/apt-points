@@ -8,30 +8,40 @@ import {environment} from '../../environments/environment';
 
 @Injectable()
 export class IotService {
-    public client: mqtt.Client;
+    public client: mqtt.MqttClient;
 
     getAWS() {
         return AWS;
     }
 
-    subscribeToPoints(): void {
-        // console.log("IotService: subscribing with creds - ", AWS.config.credentials);
+    subscribeToPointUpdates(callback: Function): void {
         if (!this.client) {
             this.client = this.createMqttClient();
+            this.client.on('connect', () => {
+                this.client.subscribe('pointChange');
+                console.log('connected to iot mqtt websocket');
+            });
         }
 
-        this.client.on('connect', () => {
-            this.client.subscribe('pointChange');
-            console.log('connected to iot mqtt websocket');
+        this.client.on('message', (topic: string, messageStr: string) => {
+            const message: {userId: string} = JSON.parse(messageStr);
+            if (topic === 'pointChange' && message.userId != null) {
+                callback(message.userId);
+            }
         });
-        this.client.on('message', (topic, message) => {
-            console.log(message.toString());
-        });
+    }
+
+    publishUserUpdatedEvent(userId: string) {
+        if (!this.client) {
+            console.error('Can not publish - WebSocket not opened yet');
+        }
+
+        this.client.publish('pointChange', JSON.stringify({userId}));
     }
 
     private createMqttClient() {
         const AWS = this.getAWS();
-        return new mqtt.Client(() => {
+        return new mqtt.MqttClient(() => {
             let url = v4.createPresignedURL(
                 'GET',
                 environment.iot_endpoint,
@@ -48,7 +58,7 @@ export class IotService {
 
             url += '&X-Amz-Security-Token=' + encodeURIComponent(AWS.config.credentials.sessionToken);
 
-            return websocket(url, ['mqttv3.1']);
+            return websocket(url, ['mqtt']);
         }, {});
     }
 }

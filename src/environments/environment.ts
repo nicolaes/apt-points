@@ -18,6 +18,6 @@ export const environment = {
     sts_endpoint: '',
     dynamodb_endpoint: '',
     s3_endpoint: '',
-    iot_endpoint: 'a2v2xuqqwcwo3h.iot.eu-central-1.amazonaws.com'
+    iot_endpoint: 'a2v2xuqqwcwo3h.iot.eu-central-1.amazonaws.com',
+    lambda_endpoint: 'https://8l6njnyhne.execute-api.eu-central-1.amazonaws.com/prod/'
 };
-

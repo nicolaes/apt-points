@@ -10,10 +10,11 @@ VOUCHES_PER_POINT = 3
 def respond(err, res=None):
     return {
         'statusCode': '400' if err else '200',
-        'body': str(err) if err else json.dumps(res),
+        'body': json.dumps(str(err) if err else res),
         'headers': {
             'Content-Type': 'application/json',
-        },
+            'Access-Control-Allow-Origin': '*'
+        }
     }
 
 
@@ -91,7 +92,7 @@ def lambda_handler(event, context):
             ExpressionAttributeValues=attrValues
         )
 
-    return respond(None, attrValues)
+    return respond(None, 'OK')
 
 
 def empty_vote():
