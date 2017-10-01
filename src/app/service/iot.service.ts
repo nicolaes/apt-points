@@ -19,7 +19,6 @@ export class IotService {
             this.client = this.createMqttClient();
             this.client.on('connect', () => {
                 this.client.subscribe('pointChange');
-                console.log('connected to iot mqtt websocket');
             });
         }
 

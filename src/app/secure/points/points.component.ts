@@ -45,23 +45,19 @@ export class PointsComponent implements LoggedInCallback {
         });
     }
 
-    swipeLeft(userId) {
-        this.initiateVote(userId, 'down');
-    }
-
-    swipeRight(userId) {
-        this.initiateVote(userId, 'up');
-    }
-
     swipe(userId: string, action = this.SWIPE_ACTION.RIGHT) {
         switch (action) {
             case this.SWIPE_ACTION.RIGHT:
-                this.swipeRight(userId);
+                this.initiateVote(userId, 'up');
                 break;
             case this.SWIPE_ACTION.LEFT:
-                this.swipeLeft(userId);
+                this.initiateVote(userId, 'down');
                 break;
         }
+    }
+
+    pan(event) {
+        console.log('pan', event);
     }
 
     initiateVote(userId: string, direction: VoteDirection) {
@@ -70,18 +66,20 @@ export class PointsComponent implements LoggedInCallback {
             .subscribe(this.voteSuccess(userId), this.voteError(userId));
     }
 
+    voteError = (userId: string) => (err: any) => {
+        this.errorMessage = JSON.parse(err.text());
+        $('#errorModal').modal('show');
+    }
+
     voteSuccess = (userId: string) => (data: any) => {
         // Add success callback
         this.errorMessage = '';
         this._iot.publishUserUpdatedEvent(userId);
     }
 
-    voteError = (userId: string) => (err: any) => {
-        this.errorMessage = err.text();
-        this.openErrorPopup();
-    }
-
-    openErrorPopup() {
-        document.getElementById("errorDetected").click();
+    getUserCssClass(user: UserPoints, pointIndex: number) {
+        const classes = [];
+        // positive:
+        return classes;
     }
 }
