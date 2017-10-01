@@ -37,8 +37,6 @@ export class VoteService {
         let cognitoUser = this._cognitoUtil.getCurrentUser();
         let userid = this._cognitoUtil.getCognitoIdentity();
         let username = cognitoUser.getUsername();
-        console.log(userid + " " + username);
-        console.log(this._cognitoUtil.getIdTokenPromise());
         return Rx.Observable
             .fromPromise(this._cognitoUtil.getIdTokenPromise())
             .mergeMap(idToken => {
