@@ -17,6 +17,9 @@
                 <div class="ball" *ngIf="pointIndex > user.points">
                     <div class="white-ball"></div>
                 </div>
+                <div class="under-vote" *ngIf="showsUnderVote(user, pointIndex)">
+                    {{user.underVote > 0 ? '+' + user.underVote : user.underVote}}
+                </div>
             </div>
         </div>
     </div>

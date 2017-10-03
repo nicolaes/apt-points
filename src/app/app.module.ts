@@ -28,6 +28,7 @@ import 'hammerjs';
 import 'hammer-timejs';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {UserComponent} from './secure/points/user.component';
+import {AudioService} from './service/audio.service';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import {UserComponent} from './secure/points/user.component';
         UserLoginService,
         UserParametersService,
         VoteService,
-        IotService],
+        IotService,
+        AudioService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {DynamoDBService} from '../../service/ddb.service';
 import {VoteService} from '../../service/vote.service';
 import {IotService} from '../../service/iot.service';
+import {AudioService} from '../../service/audio.service';
 
 
 export class UserPoints {
@@ -29,7 +30,7 @@ export class PointsComponent implements LoggedInCallback {
     public errorMessage: string;
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
-                public voteService: VoteService, private _iot: IotService) {
+                public voteService: VoteService, private _iot: IotService, private _audio: AudioService) {
         this.userService.isAuthenticated(this);
     }
 
@@ -48,7 +49,7 @@ export class PointsComponent implements LoggedInCallback {
             if (!updatedUser.waitingForUpdate) {
                 updatedUser.waitingForUpdate = 'any';
             }
-            this.ddb.updateUserPointsById(updatedUser).then(this.userUpdated(updatedUser));
+            this.ddb.updateUserPointsById(updatedUser).then(this.userUpdated);
         });
     }
 
@@ -63,7 +64,7 @@ export class PointsComponent implements LoggedInCallback {
         this.errorMessage = JSON.parse(err.text());
         $('#errorModal').modal('show');
 
-        this.ddb.updateUserPointsById(user).then(this.userUpdated(user));
+        this.ddb.updateUserPointsById(user);
     }
 
     voteSuccess = (user: UserPoints) => () => {
@@ -72,7 +73,8 @@ export class PointsComponent implements LoggedInCallback {
         this._iot.publishUserUpdatedEvent(user.userId);
     }
 
-    userUpdated = (user) => () => {
-        user.waitingForUpdate = null;
+    userUpdated = ({newUser, oldUser}) => {
+        newUser.waitingForUpdate = null;
+        this._audio.playForUser(newUser, oldUser);
     }
 }

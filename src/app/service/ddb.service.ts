@@ -84,7 +84,7 @@ export class DynamoDBService {
         });
     }
 
-    updateUserPointsById(user: UserPoints) {
+    updateUserPointsById(user: UserPoints): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!user) {
                 throw new Error('User not found ' + user.userId);
@@ -106,9 +106,10 @@ export class DynamoDBService {
                     console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
                     reject();
                 } else {
+                    const oldUser = Object.assign({}, user);
                     user.points = data.Item.points;
                     user.underVote = data.Item.underVote;
-                    resolve();
+                    resolve({newUser: user, oldUser});
                 }
             });
         });

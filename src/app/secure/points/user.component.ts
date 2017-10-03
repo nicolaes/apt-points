@@ -34,6 +34,20 @@ export class UserComponent {
     @Input() initiateVote: Function;
     SWIPE_ACTION = {LEFT: 'swipeleft', RIGHT: 'swiperight'};
 
+    showsUnderVote(user: UserPoints, pointIndex: number) {
+        if (user.underVote === 0) {
+            return false;
+        }
+
+        if (pointIndex === user.points + 1) {
+            return user.underVote > 0;
+        }
+
+        if (pointIndex === user.points) {
+            return user.underVote < 0;
+        }
+    }
+
     swipe(user: UserPoints, action = this.SWIPE_ACTION.RIGHT) {
         switch (action) {
             case this.SWIPE_ACTION.RIGHT:
