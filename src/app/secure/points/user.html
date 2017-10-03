@@ -1,4 +1,4 @@
-<div class="active"
+<div class="user-container active"
      (swipeleft)="swipe(user, $event.type)"
      (swiperight)="swipe(user, $event.type)"
      (panstart)="panStart(user)"
@@ -22,5 +22,9 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="loading-animation">
+        <img src="/assets/img/loading.gif" />
     </div>
 </div>

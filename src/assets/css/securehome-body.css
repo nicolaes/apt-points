@@ -7,6 +7,22 @@
     width: 100%;
 }
 
+.user-container {
+    position: relative;
+}
+
+.loading-animation {
+    position: absolute;
+    z-index: 1;
+    left: calc(50% - 25px);
+    top: 15px;
+}
+
+.loading-animation img {
+    width: 50px;
+    opacity: 0.5;
+}
+
 .user-name {
     position: absolute;
     top: -10px;
@@ -77,12 +93,14 @@
 
 .user-entry {
     position: relative;
+    z-index: 2;
     font-size: 14px;
     height: 82px;
     padding: 10px 0 0 0;
     border: solid 1px #dcdcdc;
     margin: 0 15px 20px;
     border-radius: 2px;
+    background: #fff;
     box-shadow: 0 3px 5px 0 #888888;
 }
 
@@ -112,11 +130,11 @@
 }
 
 .upVoting {
-    background: rgba(201, 155, 98, 0.2);
+    background: #f4ebdf;
 }
 
 .downVoting {
-    background: rgba(44, 217, 44, 0.1);
+    background: #e9fbe9;
 }
 
 @media screen and (max-device-width: 960px) {
