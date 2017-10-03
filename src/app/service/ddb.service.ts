@@ -6,8 +6,8 @@ import {Stuff} from '../secure/useractivity/useractivity.component';
 import {UserPoints} from '../secure/points/points.component';
 import * as AWS from 'aws-sdk/global';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
-import {IotService} from './iot.service';
 import {GetItemInput} from 'aws-sdk/clients/dynamodb';
+import {IotService} from './iot.service';
 
 @Injectable()
 export class DynamoDBService {
@@ -68,12 +68,15 @@ export class DynamoDBService {
                 console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
             } else {
                 data.Items.forEach((userData: any) => {
-                    var newUser = new UserPoints();
-                    newUser.userId = userData.userId;
-                    newUser.userName = userData.userName;
-                    newUser.points = userData.points;
-                    newUser.underVote = userData.underVote;
-                    userPointsList.push(newUser);
+                    userPointsList.push({
+                        userId: userData.userId,
+                        userName: userData.userName,
+                        points: userData.points,
+                        underVote: userData.underVote,
+                        dragging: false,
+                        panDelta: 0,
+                        waitingForUpdate: null
+                    });
                 });
 
                 callback();

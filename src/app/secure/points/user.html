@@ -1,0 +1,23 @@
+<div class="active"
+     (swipeleft)="swipe(user, $event.type)"
+     (swiperight)="swipe(user, $event.type)"
+     (panstart)="panStart(user)"
+     (panend)="panEnd(user)"
+     (pan)="pan(user, $event)">
+    <div class="user-entry" [ngClass]="{'upVoting': user.underVote > 0, 'downVoting': user.underVote < 0}"
+         [ngStyle]="getUserEntryStyle(user)" [@userUpdate]="getUserAnimationState(user)">
+        <div class="user-name">
+            <div class="clearfix">{{user.userName}}</div>
+        </div>
+        <div class="point-balls">
+            <div class="point-ball pull-left" *ngFor="let pointIndex of [1, 2, 3]">
+                <div class="ball chocolate-ball" *ngIf="pointIndex <= user.points">
+                    <img src="/assets/img/chocolate-ball.ico" />
+                </div>
+                <div class="ball" *ngIf="pointIndex > user.points">
+                    <div class="white-ball"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

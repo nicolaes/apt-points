@@ -1,3 +1,4 @@
+import 'web-animations-js';
 import {Component} from '@angular/core';
 import {UserLoginService} from '../../service/user-login.service';
 import {LoggedInCallback} from '../../service/cognito.service';
@@ -14,7 +15,7 @@ export class UserPoints {
     public underVote: number;
     public dragging = false;
     public panDelta = 0;
-    public waitingForUpdate = false;
+    public waitingForUpdate: string = null;
 }
 
 export type VoteDirection = 'up' | 'down';
@@ -26,7 +27,6 @@ export type VoteDirection = 'up' | 'down';
 export class PointsComponent implements LoggedInCallback {
     public userPointsList: Array<UserPoints> = [];
     public errorMessage: string;
-    SWIPE_ACTION = {LEFT: 'swipeleft', RIGHT: 'swiperight'};
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
                 public voteService: VoteService, private _iot: IotService) {
@@ -45,51 +45,25 @@ export class PointsComponent implements LoggedInCallback {
         // subscribe to websocket
         this._iot.subscribeToPointUpdates((userId: string) => {
             const updatedUser: UserPoints = this.userPointsList.find(user => user.userId === userId);
-            this.ddb.updateUserPointsById(updatedUser);//.then(() => {
-            //     if (updatedUser.waitingForUpdate) {
-            //         updatedUser.waitingForUpdate = false;
-            //     }
-            // });
+            if (!updatedUser.waitingForUpdate) {
+                updatedUser.waitingForUpdate = 'any';
+            }
+            this.ddb.updateUserPointsById(updatedUser).then(this.userUpdated(updatedUser));
         });
     }
 
-    swipe(user: UserPoints, action = this.SWIPE_ACTION.RIGHT) {
-        console.log('swipe', action);
-        switch (action) {
-            case this.SWIPE_ACTION.RIGHT:
-                this.initiateVote(user, 'up');
-                break;
-            case this.SWIPE_ACTION.LEFT:
-                this.initiateVote(user, 'down');
-                break;
-        }
-    }
-
-    panStart(item: UserPoints) {
-        item.dragging = true;
-    }
-
-    panEnd(item) {
-        item.panDelta = 0;
-        item.dragging = false;
-    }
-
-    pan(item: UserPoints, event) {
-        if (item.dragging === true) {
-            item.panDelta = event.deltaX;
-        }
-    }
-
-    initiateVote(user: UserPoints, direction: VoteDirection) {
-        user.waitingForUpdate = true;
+    initiateVote = (user: UserPoints, direction: VoteDirection) => {
+        user.waitingForUpdate = direction;
         this.voteService.movePoint(user.userId, direction, user.underVote !== 0)
             .subscribe(this.voteSuccess(user), this.voteError(user));
     }
 
     voteError = (user: UserPoints) => (err: any) => {
-        user.waitingForUpdate = false;
+        user.waitingForUpdate = null;
         this.errorMessage = JSON.parse(err.text());
         $('#errorModal').modal('show');
+
+        this.ddb.updateUserPointsById(user).then(this.userUpdated(user));
     }
 
     voteSuccess = (user: UserPoints) => () => {
@@ -98,9 +72,7 @@ export class PointsComponent implements LoggedInCallback {
         this._iot.publishUserUpdatedEvent(user.userId);
     }
 
-    getUserCssClass(user: UserPoints, pointIndex: number) {
-        const classes = [];
-        // positive:
-        return classes;
+    userUpdated = (user) => () => {
+        user.waitingForUpdate = null;
     }
 }

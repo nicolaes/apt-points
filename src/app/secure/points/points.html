@@ -1,28 +1,6 @@
 <img id="header-image" src="../../assets/img/get-the-point.png" alt="Get the points">
 
-<div *ngFor="let item of userPointsList" class="active"
-     (swipeleft)="swipe(item, $event.type)"
-     (swiperight)="swipe(item, $event.type)"
-     (panstart)="panStart(item)" (panend)="panEnd(item)" (pan)="pan(item, $event)">
-    <div class="user-entry" [ngClass]="{'upVoting': item.underVote > 0, 'downVoting': item.underVote < 0}"
-         [ngStyle]="{left: item.panDelta + 'px'}">
-        <div class="user-name">
-            <div class="clearfix">{{item.userName}}</div>
-        </div>
-        <div class="point-balls">
-            <div class="point-ball pull-left"
-                  *ngFor="let pointIndex of [1, 2, 3]"
-                  [ngClass]="getUserCssClass(item, pointIndex)">
-                <div class="ball chocolate-ball" *ngIf="pointIndex <= item.points">
-                    <img src="/assets/img/chocolate-ball.ico" />
-                </div>
-                <div class="ball" *ngIf="pointIndex > item.points">
-                    <div class="white-ball"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<user *ngFor="let user of userPointsList" [user]="user" [initiateVote]="initiateVote"></user>
 
 <!--error pop-up-->
 <div class="container">

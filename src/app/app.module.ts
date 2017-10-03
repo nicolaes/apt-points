@@ -26,6 +26,8 @@ import {VoteService} from "./service/vote.service";
 import {IotService} from './service/iot.service';
 import 'hammerjs';
 import 'hammer-timejs';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {UserComponent} from './secure/points/user.component';
 
 
 @NgModule({
@@ -43,6 +45,7 @@ import 'hammer-timejs';
         HomeComponent,
         UseractivityComponent,
         PointsComponent,
+        UserComponent,
         MyProfileComponent,
         SecureHomeComponent,
         JwtComponent,
@@ -50,6 +53,7 @@ import 'hammer-timejs';
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         HttpModule,
         routing
