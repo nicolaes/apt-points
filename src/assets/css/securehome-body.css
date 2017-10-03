@@ -46,6 +46,18 @@
     height: 100%;
 }
 
+.point-balls .slide-icon {
+    position: absolute;
+    left: 1.5%;
+    top: 28px;
+    opacity: 0.1;
+}
+
+.point-balls .slide-icon-right {
+    left: auto;
+    right: 1.5%;
+}
+
 .point-ball {
     width: 33.33%;
     height: 68px;
