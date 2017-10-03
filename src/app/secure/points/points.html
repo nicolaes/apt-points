@@ -1,9 +1,11 @@
 <img id="header-image" src="../../assets/img/get-the-point.png" alt="Get the points">
 
 <div *ngFor="let item of userPointsList" class="active"
-     (swipeleft)="swipe(item.userId, $event.type)"
-     (swiperight)="swipe(item.userId, $event.type)" (panleft)="pan($event.deltaX)">
-    <div class="user-entry" [ngClass]="{'upVoting': item.underVote > 0, 'downVoting': item.underVote < 0}">
+     (swipeleft)="swipe(item, $event.type)"
+     (swiperight)="swipe(item, $event.type)"
+     (panstart)="panStart(item)" (panend)="panEnd(item)" (pan)="pan(item, $event)">
+    <div class="user-entry" [ngClass]="{'upVoting': item.underVote > 0, 'downVoting': item.underVote < 0}"
+         [ngStyle]="{left: item.panDelta + 'px'}">
         <div class="user-name">
             <div class="clearfix">{{item.userName}}</div>
         </div>
@@ -18,7 +20,7 @@
                     <div class="white-ball"></div>
                 </div>
             </div>
-        </div><br/>
+        </div>
     </div>
 </div>
 

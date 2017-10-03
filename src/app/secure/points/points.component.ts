@@ -12,6 +12,9 @@ export class UserPoints {
     public userName: string;
     public points: number;
     public underVote: number;
+    public dragging = false;
+    public panDelta = 0;
+    public waitingForUpdate = false;
 }
 
 export type VoteDirection = 'up' | 'down';
@@ -23,7 +26,7 @@ export type VoteDirection = 'up' | 'down';
 export class PointsComponent implements LoggedInCallback {
     public userPointsList: Array<UserPoints> = [];
     public errorMessage: string;
-    SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
+    SWIPE_ACTION = {LEFT: 'swipeleft', RIGHT: 'swiperight'};
 
     constructor(public router: Router, public ddb: DynamoDBService, public userService: UserLoginService,
                 public voteService: VoteService, private _iot: IotService) {
@@ -41,40 +44,58 @@ export class PointsComponent implements LoggedInCallback {
     subscribeToPointUpdates = () => {
         // subscribe to websocket
         this._iot.subscribeToPointUpdates((userId: string) => {
-            this.ddb.updateUserPointsById(this.userPointsList, userId);
+            const updatedUser: UserPoints = this.userPointsList.find(user => user.userId === userId);
+            this.ddb.updateUserPointsById(updatedUser);//.then(() => {
+            //     if (updatedUser.waitingForUpdate) {
+            //         updatedUser.waitingForUpdate = false;
+            //     }
+            // });
         });
     }
 
-    swipe(userId: string, action = this.SWIPE_ACTION.RIGHT) {
+    swipe(user: UserPoints, action = this.SWIPE_ACTION.RIGHT) {
+        console.log('swipe', action);
         switch (action) {
             case this.SWIPE_ACTION.RIGHT:
-                this.initiateVote(userId, 'up');
+                this.initiateVote(user, 'up');
                 break;
             case this.SWIPE_ACTION.LEFT:
-                this.initiateVote(userId, 'down');
+                this.initiateVote(user, 'down');
                 break;
         }
     }
 
-    pan(event) {
-        console.log('pan', event);
+    panStart(item: UserPoints) {
+        item.dragging = true;
     }
 
-    initiateVote(userId: string, direction: VoteDirection) {
-        const user = this.userPointsList.find(u => u.userId === userId);
-        this.voteService.movePoint(userId, direction, user.underVote !== 0)
-            .subscribe(this.voteSuccess(userId), this.voteError(userId));
+    panEnd(item) {
+        item.panDelta = 0;
+        item.dragging = false;
     }
 
-    voteError = (userId: string) => (err: any) => {
+    pan(item: UserPoints, event) {
+        if (item.dragging === true) {
+            item.panDelta = event.deltaX;
+        }
+    }
+
+    initiateVote(user: UserPoints, direction: VoteDirection) {
+        user.waitingForUpdate = true;
+        this.voteService.movePoint(user.userId, direction, user.underVote !== 0)
+            .subscribe(this.voteSuccess(user), this.voteError(user));
+    }
+
+    voteError = (user: UserPoints) => (err: any) => {
+        user.waitingForUpdate = false;
         this.errorMessage = JSON.parse(err.text());
         $('#errorModal').modal('show');
     }
 
-    voteSuccess = (userId: string) => (data: any) => {
+    voteSuccess = (user: UserPoints) => () => {
         // Add success callback
         this.errorMessage = '';
-        this._iot.publishUserUpdatedEvent(userId);
+        this._iot.publishUserUpdatedEvent(user.userId);
     }
 
     getUserCssClass(user: UserPoints, pointIndex: number) {

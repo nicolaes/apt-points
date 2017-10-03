@@ -9,10 +9,6 @@ import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import {IotService} from './iot.service';
 import {GetItemInput} from 'aws-sdk/clients/dynamodb';
 
-/**
- * Created by Vladimir Budilov
- */
-
 @Injectable()
 export class DynamoDBService {
     docClient: DynamoDB.DocumentClient;
@@ -56,7 +52,6 @@ export class DynamoDBService {
     }
 
     getUserPoints(userPointsList: Array<UserPoints>, callback: Function) {
-        // console.log("DynamoDBService: getUserPoints from DDB with creds: ", AWS.config.credentials);
         var params = {
             TableName: environment.ddbTableName,
             FilterExpression : 'confirmed = :confirmed',
@@ -73,12 +68,12 @@ export class DynamoDBService {
                 console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
             } else {
                 data.Items.forEach((userData: any) => {
-                    userPointsList.push({
-                        userId: userData.userId,
-                        userName: userData.userName,
-                        points: userData.points,
-                        underVote: userData.underVote
-                    });
+                    var newUser = new UserPoints();
+                    newUser.userId = userData.userId;
+                    newUser.userName = userData.userName;
+                    newUser.points = userData.points;
+                    newUser.underVote = userData.underVote;
+                    userPointsList.push(newUser);
                 });
 
                 callback();
@@ -86,30 +81,33 @@ export class DynamoDBService {
         });
     }
 
-    updateUserPointsById(userPoints: Array<UserPoints>, userId: string) {
-        const updatedUser: UserPoints = userPoints.find(user => user.userId === userId);
-        if (!updatedUser) {
-            throw new Error('User not found ' + userId);
-        }
-
-        var clientParams: any = {};
-        if (environment.dynamodb_endpoint) {
-            clientParams.endpoint = environment.dynamodb_endpoint;
-        }
-
-        const params: GetItemInput = {
-            TableName: environment.ddbTableName,
-            Key: {userId}
-        };
-
-        const docClient = new DynamoDB.DocumentClient(clientParams);
-        return docClient.get(params, (err, data) => {
-            if (err) {
-                console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
-            } else {
-                updatedUser.points = data.Item.points;
-                updatedUser.underVote = data.Item.underVote;
+    updateUserPointsById(user: UserPoints) {
+        return new Promise((resolve, reject) => {
+            if (!user) {
+                throw new Error('User not found ' + user.userId);
             }
+
+            var clientParams: any = {};
+            if (environment.dynamodb_endpoint) {
+                clientParams.endpoint = environment.dynamodb_endpoint;
+            }
+
+            const params: GetItemInput = {
+                TableName: environment.ddbTableName,
+                Key: {userId: user.userId}
+            };
+
+            const docClient = new DynamoDB.DocumentClient(clientParams);
+            docClient.get(params, (err, data) => {
+                if (err) {
+                    console.error('DynamoDBService: Unable to query the table. Error JSON:', JSON.stringify(err, null, 2));
+                    reject();
+                } else {
+                    user.points = data.Item.points;
+                    user.underVote = data.Item.underVote;
+                    resolve();
+                }
+            });
         });
     }
 

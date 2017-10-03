@@ -37,13 +37,14 @@
 }
 
 .point-ball .white-ball {
-    background-color: silver;
+    background-color: #f0f0f0;
     width: 60px;
     height: 60px;
     margin: 4px;
     margin-right: auto;
     margin-left: auto;
     border-radius: 100px;
+    border: dashed 1px #000;
 }
 
 .point-ball img {
@@ -57,10 +58,12 @@
 .user-entry {
     position: relative;
     font-size: 14px;
-    height: 70px;
-    border-top: solid 1px #dcdcdc;
-    border-bottom: solid 1px #dcdcdc;
-    margin-bottom: 20px;
+    height: 82px;
+    padding: 10px 0 0 0;
+    border: solid 1px #dcdcdc;
+    margin: 0 15px 20px;
+    border-radius: 2px;
+    box-shadow: 0 3px 5px 0 #888888;
 }
 
 
