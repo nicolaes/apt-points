@@ -1,32 +1,29 @@
-<div class="user-container active"
+<div class="user-container"
      (swipeleft)="swipe(user, $event.type)"
      (swiperight)="swipe(user, $event.type)"
      (panstart)="panStart(user)"
      (panend)="panEnd(user)"
      (pan)="pan(user, $event)">
-    <div class="user-entry" [ngClass]="{'upVoting': user.underVote > 0, 'downVoting': user.underVote < 0}"
+    <div class="user-entry navbar navbar-{{colorClass}}" [ngClass]="{'upVoting': user.underVote > 0, 'downVoting': user.underVote < 0}"
          [ngStyle]="getUserEntryStyle(user)" [@userUpdate]="getUserAnimationState(user)">
-        <div class="user-name">
-            <div class="clearfix">{{user.userName}}</div>
-        </div>
-        <div class="point-balls">
-            <div class="point-ball pull-left" *ngFor="let pointIndex of [1, 2, 3]">
-                <div class="ball chocolate-ball" *ngIf="pointIndex <= user.points">
-                    <img src="/assets/img/chocolate-ball.ico" />
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="point-balls">
+                    <div class="ball pull-right" *ngFor="let pointIndex of [3, 2, 1]">
+                        <i class="fa fa-3x" [ngClass]="(pointIndex <= user.points) ? 'fa-circle' : 'fa-circle-o'"></i>
+                        <div class="under-vote text-{{colorClass}}" *ngIf="showsUnderVote(user, pointIndex)">
+                            {{user.underVote > 0 ? '+' + user.underVote : user.underVote}}
+                        </div>
+                    </div>
+                    <!--<div class="slide-icon fa fa-angle-double-left fa-2x"></div>-->
+                    <!--<div class="slide-icon slide-icon-right fa fa-angle-double-right fa-2x"></div>-->
                 </div>
-                <div class="ball" *ngIf="pointIndex > user.points">
-                    <div class="white-ball"></div>
-                </div>
-                <div class="under-vote" *ngIf="showsUnderVote(user, pointIndex)">
-                    {{user.underVote > 0 ? '+' + user.underVote : user.underVote}}
-                </div>
+                <div class="user-name navbar-brand">{{user.userName}}</div>
             </div>
-            <div class="slide-icon fa fa-angle-double-left fa-2x"></div>
-            <div class="slide-icon slide-icon-right fa fa-angle-double-right fa-2x"></div>
         </div>
     </div>
 
     <div class="loading-animation">
-        <img src="/assets/img/loading.gif" />
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
     </div>
 </div>

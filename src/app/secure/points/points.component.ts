@@ -85,4 +85,9 @@ export class PointsComponent implements LoggedInCallback, OnDestroy {
         newUser.waitingForUpdate = null;
         this._audio.playForUser(newUser, oldUser);
     }
+
+    getColorClass(index) {
+        const colors = ['primary', 'info', 'success', 'warning', 'danger'];
+        return colors[index % 5];
+    }
 }

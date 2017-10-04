@@ -1,37 +1,24 @@
-<div id="wrapper">
-
+<div>
     <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="index.html">APT Points</a>
-            <ul class="nav navbar-top-links navbar-right pull-right">
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a [routerLink]="['/securehome/myprofile']"><i class="fa fa-user fa-fw"></i> User
-                            Profile</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a [routerLink]="['/securehome/logout']">Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">APT Team</a>
+                <a class="navbar-toggle logout" [routerLink]="['/securehome/logout']">
+                    <i class="fa fa-power-off fa-2x"></i>
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- Page Content -->
-    <div id="page-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-
-                    <router-outlet></router-outlet>
+    <div class="wrapper">
+        <div class="main main-raised">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <router-outlet></router-outlet>
+                    </div>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

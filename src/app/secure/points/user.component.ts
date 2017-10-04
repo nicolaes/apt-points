@@ -32,6 +32,7 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 export class UserComponent {
     @Input() user: UserPoints;
     @Input() initiateVote: Function;
+    @Input() colorClass: string;
     SWIPE_ACTION = {LEFT: 'swipeleft', RIGHT: 'swiperight'};
 
     showsUnderVote(user: UserPoints, pointIndex: number) {
@@ -79,10 +80,10 @@ export class UserComponent {
         let transition = 'left 300ms ease-in';
         switch (user.waitingForUpdate) {
             case 'up':
-                left = '100%';
+                left = '120%';
                 break;
             case 'down':
-                left = '-100%';
+                left = '-120%';
                 break;
             default:
                 left = user.panDelta + 'px';

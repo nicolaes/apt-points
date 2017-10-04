@@ -1,19 +1,17 @@
-<img id="header-image" src="../../assets/img/get-the-point.png" alt="Get the points">
+<!--<img id="header-image" src="/assets/img/get-the-point.png" alt="Get the points">-->
 
-<user *ngFor="let user of userPointsList" [user]="user" [initiateVote]="initiateVote"></user>
+<user *ngFor="let user of userPointsList; let i = index" [user]="user" [initiateVote]="initiateVote"
+      [colorClass]="getColorClass(i)"></user>
 
-<!--error pop-up-->
-<div class="container">
-    <!-- Modal -->
-    <div class="modal fade" id="errorModal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <p>{{errorMessage}}</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default center-block" data-dismiss="modal" >Close</button>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="errorModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p>{{errorMessage}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default center-block" data-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>
