@@ -2,6 +2,7 @@ import boto3
 import json
 
 dynamo = boto3.client('dynamodb')
+iot = boto3.client('iot')
 
 def respond(err, res=None):
     return {
@@ -26,6 +27,7 @@ def lambda_handler(event, context):
     userName = payload['userName'] if 'userName' in payload else 'Some random guy'
 
     if 'Item' not in itemResult:
+        # Add user to the DDB user table
         dynamo.put_item(
             TableName=payload['TableName'],
             Item={
@@ -33,8 +35,14 @@ def lambda_handler(event, context):
                 'userName': {'S': userName},
                 'points': {'N': '0'},
                 'underVote': {'N': '0'},
-                'confirmed': {'BOOL': False}
+                'confirmed': {'BOOL': True}
             }
+        )
+
+        # Allow the user to access IoT WebSocket
+        response = iot.attach_principal_policy(
+            policyName='AllowAll',
+            principal=payload['userId']
         )
 
     else:
