@@ -33,28 +33,6 @@ export class VoteService {
             });
     }
 
-    createUser() {
-        let cognitoUser = this._cognitoUtil.getCurrentUser();
-        let userid = this._cognitoUtil.getCognitoIdentity();
-        let username = cognitoUser.getUsername();
-        return Rx.Observable
-            .fromPromise(this._cognitoUtil.getIdTokenPromise())
-            .mergeMap(idToken => {
-                const headers = new Headers({
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Headers': 'Authorization',
-                    'Authorization': idToken
-                });
-                const search = {
-                    TableName: environment.ddbTableName,
-                    userName: username,
-                    userId: userid
-                };
-                return this._http.get(environment.lambda_endpoint + 'createUser', {headers, search})
-                    .map(res => res.json());
-            });
-    }
-
     addVoucher(userId: string) {
         return this.movePoint(userId, 'up', true);
     }

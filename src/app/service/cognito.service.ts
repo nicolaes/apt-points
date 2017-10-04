@@ -1,12 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {
-    AuthenticationDetails,
-    CognitoIdentityServiceProvider,
-    CognitoUser,
-    CognitoUserAttribute,
-    CognitoUserPool
-} from 'amazon-cognito-identity-js';
+import {CognitoUserPool, CognitoUserSession} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk/global';
 import * as awsservice from 'aws-sdk/lib/service';
 import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
@@ -147,7 +141,7 @@ export class CognitoUtil {
             if (this.getCurrentUser() == null) {
                 reject();
             }
-            this.getCurrentUser().getSession(function (err, session) {
+            this.getCurrentUser().getSession(function (err, session: CognitoUserSession) {
                 if (err) {
                     console.log('CognitoUtil: Can\'t set the credentials:' + err);
                     reject();

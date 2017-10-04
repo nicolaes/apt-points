@@ -38,7 +38,11 @@ export class PointsComponent implements LoggedInCallback {
         if (!isLoggedIn) {
             this.router.navigate(['/home/login']);
         } else {
-            this.ddb.getUserPoints(this.userPointsList, this.subscribeToPointUpdates);
+            this.ddb.createUser().subscribe(() => {
+                this.ddb.getUserPoints(this.userPointsList, this.subscribeToPointUpdates);
+            }, err => {
+                this.errorMessage = 'Error creating DDB user';
+            });
         }
     }
 

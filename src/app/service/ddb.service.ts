@@ -8,12 +8,21 @@ import * as AWS from 'aws-sdk/global';
 import * as DynamoDB from 'aws-sdk/clients/dynamodb';
 import {GetItemInput} from 'aws-sdk/clients/dynamodb';
 import {IotService} from './iot.service';
+import {Headers, Http} from '@angular/http';
+import * as Rx from 'rxjs';
+import {CognitoUserAttribute} from 'amazon-cognito-identity-js';
+
+class CognitoUserDetails {
+    public idToken: string;
+    public userId: string;
+    public userName: string;
+}
 
 @Injectable()
 export class DynamoDBService {
     docClient: DynamoDB.DocumentClient;
 
-    constructor(public cognitoUtil: CognitoUtil, public iot: IotService) {
+    constructor(public cognitoUtil: CognitoUtil, public iot: IotService, private _http: Http) {
         // console.log("DynamoDBService: constructor");
     }
 
@@ -151,6 +160,42 @@ export class DynamoDBService {
         DDB.putItem(itemParams, function (result) {
             console.log('DynamoDBService: wrote entry: ' + JSON.stringify(result));
         });
+    }
+
+    createUser() {
+        var cognitoPromise: Promise<CognitoUserDetails> = new Promise((resolve, reject) => {
+            this.cognitoUtil.getIdTokenPromise().then((idToken: string) => {
+                let cognitoUser = this.cognitoUtil.getCurrentUser();
+                let userId = this.cognitoUtil.getCognitoIdentity();
+                console.log('userId', userId);
+                cognitoUser.getUserAttributes(function (err, result) {
+                    if (err) {
+                        reject();
+                    } else {
+                        const nicknameAttr: CognitoUserAttribute =
+                            result.find((attr: CognitoUserAttribute) => attr.getName() === 'nickname');
+                        resolve({idToken, userName: nicknameAttr.getValue(), userId});
+                    }
+                });
+            });
+        });
+
+        return Rx.Observable
+            .fromPromise(cognitoPromise)
+            .mergeMap(({idToken, userName, userId}) => {
+                const headers = new Headers({
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Authorization',
+                    'Authorization': idToken
+                });
+                const search = {
+                    TableName: environment.ddbTableName,
+                    userName: userName,
+                    userId: userId
+                };
+                return this._http.get(environment.lambda_endpoint + 'createUser', {headers, search})
+                    .map(res => res.json());
+            });
     }
 
 }

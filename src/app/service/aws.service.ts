@@ -1,7 +1,6 @@
-import {Injectable} from "@angular/core";
-import {Callback, CognitoUtil} from "./cognito.service";
-import * as AWS from "aws-sdk/global";
-import {VoteService} from "./vote.service";
+import {Injectable} from '@angular/core';
+import {Callback, CognitoUtil} from './cognito.service';
+import * as AWS from 'aws-sdk/global';
 
 /**
  * Created by Vladimir Budilov
@@ -14,7 +13,7 @@ export class AwsUtil {
     public static firstLogin: boolean = false;
     public static runningInit: boolean = false;
 
-    constructor(public cognitoUtil: CognitoUtil, private _voteService: VoteService) {
+    constructor(public cognitoUtil: CognitoUtil) {
         AWS.config.region = CognitoUtil._REGION;
     }
 
@@ -96,10 +95,6 @@ export class AwsUtil {
                     // this.ddb.writeLogEntry("login");
                     AwsUtil.firstLogin = false;
                 }
-
-                // var cognitoCreds = this.cognitoUtil.getCognitoCreds();
-                // console.log('cognitoCreds', cognitoCreds);
-                this._voteService.createUser();
             }
         });
     }
