@@ -15,8 +15,8 @@ export class VoteService {
 
     movePoint(userId: string, direction: string, vouching: boolean) {
         return Rx.Observable
-            .fromPromise(this._cognitoUtil.getIdTokenPromise())
-            .mergeMap(idToken => {
+            .fromPromise(this._cognitoUtil.getUserDetails())
+            .mergeMap(({idToken}) => {
                 const headers = new Headers({
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Headers': 'Authorization',

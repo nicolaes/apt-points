@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
-import {CognitoUserPool, CognitoUserSession} from 'amazon-cognito-identity-js';
+import {CognitoUserAttribute, CognitoUserPool, CognitoUserSession} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk/global';
 import * as awsservice from 'aws-sdk/lib/service';
 import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
@@ -22,6 +22,12 @@ export interface Callback {
     callback(): void;
 
     callbackWithParam(result: any): void;
+}
+
+export class CognitoUserDetails {
+    public idToken: string;
+    public userId: string;
+    public attributes: Array<CognitoUserAttribute>;
 }
 
 @Injectable()
@@ -136,24 +142,37 @@ export class CognitoUtil {
         }
     }
 
-    getIdTokenPromise(): Promise<string> {
+    getUserDetails(): Promise<CognitoUserDetails> {
         return new Promise((resolve, reject) => {
-            if (this.getCurrentUser() == null) {
+            const currentUser = this.getCurrentUser();
+            if (currentUser == null) {
                 reject();
-            }
-            this.getCurrentUser().getSession(function (err, session: CognitoUserSession) {
-                if (err) {
-                    console.log('CognitoUtil: Can\'t set the credentials:' + err);
-                    reject();
-                }
+            } else {
+                currentUser.getSession((err, session: CognitoUserSession) => {
+                    if (err) {
+                        console.log('CognitoUtil: Can\'t set the credentials:' + err);
+                        reject();
+                    }
 
-                if (session.isValid()) {
-                    resolve(session.getIdToken().getJwtToken());
-                } else {
-                    console.log('CognitoUtil: Got the id token, but the session isn\'t valid');
-                    reject();
-                }
-            });
+                    if (session.isValid()) {
+                        currentUser.getUserAttributes((attrErr, attributes: Array<CognitoUserAttribute>) => {
+                            if (attrErr) {
+                                console.log('CognitoUtil: Got the session, can\'t get the attributes');
+                                reject();
+                            } else {
+                                resolve({
+                                    idToken: session.getIdToken().getJwtToken(),
+                                    attributes: attributes,
+                                    userId: this.cognitoCreds.identityId
+                                });
+                            }
+                        });
+                    } else {
+                        console.log('CognitoUtil: Got the id token, but the session isn\'t valid');
+                        reject();
+                    }
+                });
+            }
         });
     }
 

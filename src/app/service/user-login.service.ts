@@ -28,7 +28,7 @@ export class UserLoginService {
 
         console.log("UserLoginService: Params set...Authenticating the user");
         let cognitoUser = new CognitoUser(userData);
-        console.log("UserLoginService: config is " + AWS.config);
+        console.log("UserLoginService: config is ", AWS.config);
         var self = this;
         cognitoUser.authenticateUser(authenticationDetails, {
             newPasswordRequired: function (userAttributes, requiredAttributes) {
@@ -109,7 +109,7 @@ export class UserLoginService {
         console.log("UserLoginService: Logging out");
         // this.ddb.writeLogEntry("logout");
         this.cognitoUtil.getCurrentUser().signOut();
-
+        this.cognitoUtil.cognitoCreds.clearCachedId();
     }
 
     isAuthenticated(callback: LoggedInCallback) {
