@@ -1,5 +1,5 @@
 import 'web-animations-js';
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {UserLoginService} from '../../service/user-login.service';
 import {LoggedInCallback} from '../../service/cognito.service';
 import {Router} from '@angular/router';
@@ -25,7 +25,7 @@ export type VoteDirection = 'up' | 'down';
     selector: 'aws-apt-points',
     templateUrl: './points.html',
 })
-export class PointsComponent implements LoggedInCallback {
+export class PointsComponent implements LoggedInCallback, OnDestroy {
     public userPointsList: Array<UserPoints> = [];
     public errorMessage: string;
 
@@ -44,6 +44,10 @@ export class PointsComponent implements LoggedInCallback {
                 this.errorMessage = 'Error creating DDB user';
             });
         }
+    }
+
+    ngOnDestroy() {
+        this._iot.destroyWebSocket();
     }
 
     subscribeToPointUpdates = () => {

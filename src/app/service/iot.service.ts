@@ -30,6 +30,11 @@ export class IotService {
         });
     }
 
+    destroyWebSocket() {
+        this.client.end();
+        this.client = null;
+    }
+
     publishUserUpdatedEvent(userId: string) {
         if (!this.client) {
             console.error('Can not publish - WebSocket not opened yet');
